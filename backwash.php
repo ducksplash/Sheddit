@@ -80,6 +80,9 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
   }
 
 
+
+  // insert text post
+
   function insert_post($dbc, $ownerID, $title, $body) 
   {
       // Escape the values to prevent SQL injection
@@ -128,6 +131,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
   }
   
 
+  // insert file post
 
   function insert_file($dbc, $ownerID, $title, $filestring) 
   {
@@ -138,44 +142,85 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
   
       $title_trimmed = (strlen($title) > 99) ? substr($title, 0, 100) : $title;
   
-      // Construct the SQL query to check if the item already exists
-      $sql_check = "SELECT id FROM items WHERE title='$title_trimmed' AND body='$filestring' LIMIT 1";
-  
-      // Execute the SQL query
-      $result = mysqli_query($dbc, $sql_check);
-      $row = mysqli_fetch_array($result);
-  
-      if (strlen($title_trimmed) > 0 && strlen($filestring) > 0)
+      // get file details
+      $data_pos = strpos($filestring, ',');
+      $data = substr($filestring, $data_pos);
+
+      // decode the base64 data
+      $image_data = base64_decode($data);
+
+      // get the MIME type of the image
+      $finfo = finfo_open(FILEINFO_MIME_TYPE);
+      $mime_type = finfo_buffer($finfo, $image_data);
+
+      // map the MIME type to the file extension
+      $extension = '';
+      switch ($mime_type) {
+          case 'image/jpeg':
+              $extension = 'jpg';
+              break;
+          case 'image/png':
+              $extension = 'png';
+              break;
+          case 'image/gif':
+              $extension = 'gif';
+              break;
+          default:
+            $extension = 'xxx';
+            break;
+      }
+
+      // print($extension);
+      // print($mime_type);
+      // die();
+      
+      if ($extension !== "xxx")
       {
-        if($row) 
-        {
-            // Item already exists, return false
-            return "File Already Saved";
-        } 
-        else 
-        {
-            // Construct the SQL query to insert the new item
-            $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, date_created, date_modified) 
-            VALUES ('$ownerID', 2, '$title_trimmed', '$filestring', NOW(), NOW())";
+        // Construct the SQL query to check if the item already exists
+        $sql_check = "SELECT id FROM items WHERE title='$title_trimmed' AND body='$filestring' LIMIT 1";
     
-            // Execute the SQL query
-            if (mysqli_query($dbc, $sql_insert)) 
-            {
-                return "File Saved";
-            } 
-            else 
-            {
-                return "An Error Occured [1]";
-            }
+        // Execute the SQL query
+        $result = mysqli_query($dbc, $sql_check);
+        $row = mysqli_fetch_array($result);
+    
+        if (strlen($title_trimmed) > 0 && strlen($filestring) > 0)
+        {
+          if($row) 
+          {
+              // Item already exists, return false
+              return "File Already Saved";
+          } 
+          else 
+          {
+              // Construct the SQL query to insert the new item
+              $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, extension, date_created, date_modified) 
+              VALUES ('$ownerID', 2, '$title_trimmed', '$filestring', '$extension', NOW(), NOW())";
+      
+              // Execute the SQL query
+              if (mysqli_query($dbc, $sql_insert)) 
+              {
+                  return "File Saved";
+              } 
+              else 
+              {
+                  return "An Error Occured [1]";
+              }
+          }
+        }
+        else
+        {
+          return "All fields must be filled";
         }
       }
       else
       {
-        return "All fields must be filled";
+        return "File type invalid";
       }
   }
   
 
+
+  // insert link post
 
   function insert_link($dbc, $ownerID, $title, $linkurl) 
   {
@@ -191,8 +236,8 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
 
   
-      $title_trimmed = (strlen($title) > 99) ? substr($title, 0, 100) : $title;
-      $linkurl_trimmed = (strlen($linkurl) > 999) ? substr($linkurl, 0, 200) : $linkurl;
+      $title_trimmed = (strlen($title) > 100) ? substr($title, 0, 100) : $title;
+      $linkurl_trimmed = (strlen($linkurl) > 200) ? substr($linkurl, 0, 200) : $linkurl;
   
       // Construct the SQL query to check if the item already exists
       $sql_check = "SELECT id FROM items WHERE title='$title_trimmed' AND body='$linkurl_trimmed' LIMIT 1";
