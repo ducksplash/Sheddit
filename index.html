@@ -8,8 +8,26 @@
 </head>
 <body>
 
-    <div style="display: flex; width: 80%; margin: 0 auto;">
 
+    <!-- header panel-->
+    <div class="pageheader">
+    <div class="sitetitle">
+    some test text
+    </div>
+    <div class="topictitle">30 Character Long Topic Title!</div>
+    <div class="topicpath">/<a href="#" class="go_home" title="Front Page">main</a>/<a href="#" class="go_up" title="Post List">topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="gobackbutton">Go Back</button></div>
+    
+    </div>
+
+    <!-- / header panel -->
+
+    
+    <!-- main page body -->
+    <div class="pageparent">
+
+
+    <!-- posting body -->
 	<div class="postingbody">
     <label for="title_input">Title</label><br/>
     <input id="title_input" type="text" placeholder="title" maxlength="1000" class="postinput"/><br/>
@@ -26,7 +44,7 @@
     <br/>
     <br/>
 
-    <!-- post type -->
+    <!-- post type (dynamic area) -->
 
     <span id="post_window">
 
@@ -38,38 +56,140 @@
     <!-- /post type -->
     <br/>
     <br/>
-	<button id="send_button" class="sendbutton" disabled>Send</button>
+	<button id="send_button" class="sendbutton" style="float: left;" disabled>Send</button>
     <br/><br/>
-    <span><span id="resso"></span></span>
+    <span><span id="resso" style="float: left;"></span></span>
     </div>
 
     <!-- end posting body-->
     
+
     <!-- displaying body -->
+
     <div class="displayingbody">
-    <span id="thread_window">
-        <div style="display: flex; align-items: center;">
-            <div id="reppanel" style="width: 10%; text-align: center; vertical-align: middle;">
-            <button class="arrow up" title="Add Rep"> </button><br/>
-            <span id="doot" class="repreading">1</span><br/>
-            <button class="arrow down" title="Reduce Rep"> </button><br/>
-            </div>
-            <div style="width: 80%; padding: 6px; border: 0.1px solid #a0a0a0;">
-            <button class="profile_button">Owner Username</button><br/>
-            <pre>Pre Formatted Text post body
-            </pre>
-            <sup>DATETIME</sup>
-            <button
-            </div>
+
+        
+
+        <div id="post_window" class="postwindow">
+
+        <div class="postitems">
+            <div id="reppanelpost" class="displayreppost">
+                <button class="arrow up" title="Add Rep"> </button><br/>
+                <span id="doot" class="repreadingpost">1</span><br/>
+                <button class="arrow down" title="Reduce Rep"> </button><br/>
+            </div>            
         </div>
 
+        </div>
+        <!-- thread window (dynamic area)-->
 
-    </span>
+        <div id="thread_window" class="threadwindow">
+
+
+            
+            <div class="displaypost" id="always_zero">
+
+                    <div id="reppanel" class="displayrep">
+                    <button class="arrow up" title="Add Rep"> </button><br/>
+                    <span id="doot" class="repreading">1</span><br/>
+                    <button class="arrow down" title="Reduce Rep"> </button><br/>
+                    </div>
+
+                <div class="displaypostroot">
+                <div class="posttitle">Topic Title Unabridged</div>
+                By <button class="profile_button">Owner Username</button><br/>
+                <pre>Pre Formatted Text post body
+                </pre>
+                <sup>DATETIME</sup><br/>
+                <button class="replybutton" title="Reply">Reply</button>
+                <button class="replybutton" title="Reply With Quote">Quote</button>
+                <button title="Delete" class="deletebutton">Delete</button>
+                </div>
+            </div>    
+
+            <div class="displayreply" id="incrementally_specified">
+                    
+                    <div id="reppanel" class="displayrep">
+                    <button class="arrow up" title="Add Rep"> </button><br/>
+                    <span id="doot" class="repreading">1</span><br/>
+                    <button class="arrow down" title="Reduce Rep"> </button><br/>
+                    </div>
+
+                <div class="displaypostroot">
+                <span class="posttitle">RE: Topic Title Unabridged</span><br/>
+                By <button class="profile_button">Owner Username</button><br/>
+                <pre>Pre Formatted Text post body
+                </pre>
+                <sup>DATETIME</sup><br/>
+                <button class="replybutton" title="Reply">Reply</button>
+                <button class="replybutton" title="Reply With Quote">Quote</button>
+                <button title="Delete" class="deletebutton">Delete</button>
+                </div>
+            </div>
+
+            <div class="displayreply" id="incrementally_specified">
+                    
+                    <div id="reppanel" class="displayrep">
+                    <button class="arrow up" title="Add Rep"> </button><br/>
+                    <span id="doot" class="repreading">1</span><br/>
+                    <button class="arrow down" title="Reduce Rep"> </button><br/>
+                    </div>
+
+                <div class="displaypostroot">
+                <span class="posttitle">RE: Topic Title Unabridged</span><br/>
+                By <button class="profile_button">Sample Username</button><br/>
+                <pre>Pre Formatted Text post body
+                </pre>
+                <sup>DATETIME</sup><br/>
+                <button class="replybutton" title="Reply">Reply</button>
+                <button class="replybutton" title="Reply With Quote">Quote</button>
+                <button title="Delete" class="deletebutton">Delete</button>
+                </div>
+            </div>
+        </div>
+        <!-- / thread window -->
     </div>
     <!-- /displaying body -->
+    
+
+        <!-- right side panel-->
+        <div class="rightsidepanel">
+        
+        <!-- account (dynamic area) -->
+        <div class="account" id="account">
+        <div style="font-size: 1.2vw; color: #404040;">Sign In<br/>Or Register</div><br/>
+
+
+        <label for="username_input">Username</label><br/>
+        <input id="username_input" type="text" placeholder="Username" maxlength="255" class="signinput"/><br/>
+        <br/>            
+        <label for="password_input">Password</label><br/>
+        <input id="password_input" type="password" placeholder="Password" maxlength="255" class="signinput"/><br/>
+            
+        </div>
+        <!-- /account -->
+        
+        <!-- / right side panel -->
+        </div>    
 
 
     </div>
+    <!-- / main page body-->
+
+
+
+    <!-- footer panel-->
+    <div class="pagefooter">
+        <div class="copyright">
+        &copy Thomas Kane 2023
+        </div>
+        <div class="siteby"></div>
+        <div class="gitlink"><a href="#" class="gitlink">GitHub</a></div>
+    </div>
+    
+        <!-- / header panel -->
+    
+
     
 <script src="./sequesters/jScript.js"></script>
 </body>

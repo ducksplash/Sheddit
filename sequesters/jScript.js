@@ -5,6 +5,7 @@
         var file_b64_body = '';
         var title_ready = false;
         var post_ready = false;
+        
         $(document).ready(function()
         {
 

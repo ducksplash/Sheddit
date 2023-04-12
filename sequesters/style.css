@@ -2,15 +2,123 @@ body {
     background-color: white;
     color: #606060;
     font-family: "DejaVu Sans", sans-serif;
-    font-size: 14px;
+    font-size: 1.1vw;
 }
 a {
-    color: #404040;
+    color: #ffffff;
+    text-decoration-skip-ink: auto;
+    text-decoration: underline overline;
+    text-decoration-style:dotted;
 }
+
+a.gitlink {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #00ff00;
+}
+
+
+.pageheader {
+    width: 80vw;
+    margin: 0 auto;
+    background-color:teal;
+    color: #ffffff;
+    padding: 3px;
+    height: 5%;
+    font-size: 1.2vw;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+}
+.sitetitle {
+    color: #ffffff;
+    padding: 3px;
+    width: 12vw;
+    font-size: 1.6vw;
+    font-weight: bold;
+}
+
+.topictitle {
+    color: #ffffff;
+    padding: 3px;
+    width: 20vw;
+    font-size: 1.3vw;
+    font-weight: bold;
+}
+
+.topicpath {
+    text-align: right;
+    width: 40vw;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.4vw;
+    padding: 3px;
+}
+
+.pagefooter {
+    width: 80vw;
+    margin: 0 auto;
+    background-color:teal;
+    color: #ffffff;
+    padding: 3px;
+    height: 5%;
+    font-size: 1.2vw;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+}
+.siteby {
+    color: #ffffff;
+    padding: 3px;
+    width: 12vw;
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+.copyright {
+    color: #ffffff;
+    padding: 3px;
+    width: 20vw;
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+.gitlink {
+    text-align: right;
+    width: 40vw;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1vw;
+    padding: 3px;
+}
+.gobackbutton {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 3px;
+}
+.gobackbutton:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.gobackbutton:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
+}
+
+
 .sendbutton {
     background-color: #FFFFFF;
     color: #404040;
-    font-size: 1vw;
+    font-size: 1.2vw;
     font-weight: bold;
     text-decoration: none;
     border: 0.1px solid #404040;
@@ -23,7 +131,6 @@ a {
 .sendbutton:disabled {
     background-color: #c0c0c0;
     color: #efefef;
-    font-size: 1vw;
     font-weight: bold;
     text-decoration: none;
     border: 0.1px solid #303030;
@@ -31,7 +138,7 @@ a {
 .profile_button {
     background-color: #FFFFFF;
     color: #404040;
-    font-size: 1vw;
+    font-size: 1.2vw;
     font-weight: bold;
     text-decoration: none;
     border: none;
@@ -43,46 +150,106 @@ a {
 .profile_button:disabled {
     background-color: #c0c0c0;
     color: #efefef;
-    font-size: 1vw;
     font-weight: bold;
     text-decoration: none;
 }
-.postingbody {
-    font-size: 1vw;
-    font-weight: bold;
+
+.replybutton {
+    background-color: #FFFFFF;
     color: #404040;
-    width: 20%;
-    margin: 0 auto;
-    padding: 10px;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 1px;
+    width: 5vw;
 }
-.displayingbody {
-    font-size: 1vw;
+.replybutton:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.replybutton:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
+}
+
+
+.deletebutton {
+    background-color: #880000;
+    color: #efefef;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border:  0.1px solid #606060;
+    padding: 1px;
+    width: 5vw;
+}
+.deletebutton:hover {
+    background-color: #ff0000;
+    color: #efefef;
+}
+.deletebutton:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
+}
+
+
+
+
+label {
+    font-size: 1.2vw;
     font-weight: bold;
     color: #404040;
-    background-color: #ffffff;
-    width: 60%;
+    float: left;
+    padding-bottom: 6px;
+}
+.pageparent {
+    display: flex; 
+    width: 80vw; 
+    align-content:center;
     margin: 0 auto;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+.postingbody {
+    color: #404040;
+    width: 18vw;
+    margin: 0 auto;
+    margin-right: 10px;
+    text-align: center;
     padding: 10px;
+    border: 0.1px solid #909090;
 }
 .postinputtextarea {
     height: 14vh;
     color: #404040;
     background-color: #ffffff;
     resize: none;
-    font-size: 16px;
+    font-size: 1.3vw;
     width: 16vw;
     border: 0.1px solid #404040;
 }
 .postinput {
     width: 16vw;
-    font-size: 16px;
+    font-size: 1.2vw;
+    color: #404040;
+    background-color: #ffffff;
+    border: 0.1px solid #404040;
+}
+.signinput {
+    width: 10vw;
+    font-size: 1.2vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
 select.postinput {
     width: 16.45vw;
-    font-size: 16px;
+    font-size: 1.2vw;
     color: #404040;
     padding: 3px;
     background-color: #ffffff;
@@ -90,17 +257,134 @@ select.postinput {
 }
 .charsleft {
     font-weight: normal;
+    font-size: 1vw;
     font-style: italic;
+    padding-top: 4px;
+    float: left;
+}
+
+.account {
+    font-size: 1.2vw;
+    text-align: center;
+    padding: 4px;
+}
+
+.postwindow {
+    height: 60vh;
+    width: 45vw;
+    overflow: auto;
+    padding: 10px;
+    display: block;
+}
+
+.postitems {
+    display: flex; 
+    align-items:flex-start;
+}
+
+
+
+.displayrep {
+    width: 2vw; 
+    text-align: center; 
+    vertical-align: middle;
+}
+.repreadingpost 
+{
+    color: #404040;
+    font-weight: bold;
+    font-size: 1.3vw;
+    margin-top: 10px;
+    line-height: 20px;
+}
+.threadwindow {
+    height: 60vh;
+    width: 45vw;
+    overflow: auto;
+    padding: 10px;
+    display: none;
+}
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #f40006 #f3f3f3;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 20px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f3f3f3;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #f40006;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }
+
+
+.displayingbody {
+    font-size: 1vw;
+    font-weight: bold;
+    color: #404040;
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 6px;
+    border: 0.1px solid #909090;
+}
+
+.rightsidepanel {
+    font-size: 1vw;
+    font-weight: bold;
+    color: #404040;
+    width: 18vw;
+    margin: 0 auto;
+    margin-left: 10px;
+    text-align: left;
+    padding: 10px;
+    border: 0.1px solid #909090;
+}
+
+.displaypost {
+    display: flex; 
+    align-items:flex-start;
+}
+.posttitle {
+    font-size: 1.2vw;
+    font-weight: bold;
+    font-style: italic;
+    padding-bottom: 4px;
+}
+.displayreply {
+    display: flex; 
+    align-items:flex-start;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.displayrep {
+    width: 2vw; 
+    text-align: center; 
+    vertical-align: middle;
+}
+.displaypostroot {
+    width: 40vw; 
+    padding: 6px; 
+    border: 0.1px solid #a0a0a0;
 }
 
 .arrow {
   border: solid black;
-  border-width: 0 4px 4px 0;
+  border-width: 0 3px 3px 0;
   background-color: #ffffff;
   display: inline-block;
   padding: 0px;
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
 }
 
 .right {
@@ -128,7 +412,7 @@ select.postinput {
   border: solid #00ff00;
   transform: rotate(-135deg);
   -webkit-transform: rotate(-135deg);
-  border-width: 0 4px 4px 0;
+  border-width: 0 3px 3px 0;
 }
 
 .down:hover {
@@ -143,7 +427,7 @@ select.postinput {
 {
     color: #404040;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 1.3vw;
     margin-top: 10px;
     line-height: 20px;
 }
