@@ -333,3 +333,150 @@
 
 
         }
+
+
+        $(".loadtopics").click(function() {
+            console.log('load topics by click');
+            load_topics();
+        });
+
+        
+        function load_topics()
+        {
+            console.log('load topics on load');
+
+
+
+            // set visible windows 
+            // this is the 'topics' function so we want topics visible and thread/posts hidden
+
+            $('.postwindow').css('display', 'none');
+            $('.threadwindow').css('display', 'none');
+            $('.topicwindow').css('display', 'none');
+            $('.loadingscreen').css('display', 'block');
+
+            // empty the demo content out of the topic window
+
+            $('.topicwindow').empty();
+
+            $('.topictitle').text("All topics (home)");
+
+            // set 
+
+            // let's find the topics 
+            $.ajax({
+                type: "GET",
+                url: "./getbeefs.php",
+                data: {
+                    get_type: 'topic'
+                },
+                success: function(response) 
+                {
+                    $('.topicwindow').css('display', 'block');
+                    $('.loadingscreen').css('display', 'none');
+                    
+                    console.log(response.length);
+
+                    for (var i = 0; i < response.length; i++)
+                    {
+                        var topicID = response[i]['id'];
+                        var topicname = response[i]['title'];
+                        var topicdescription = response[i]['description'];
+                        var topicpostcount = response[i]['posts'];
+                        var topicreplycount = response[i]['replies'];
+                        var lastpostdate = response[i]['lastpost'];
+                        
+                        $('.topicwindow').append('<div class="topicpackage" id="topicpackage_0">\n\
+                        <div class="topiccontainer">\n\
+                            <div class="topicdetails">\n\
+                            <div class="topiclinktitle" id="topic_name_'+topicID+'">\n\
+                            <button class="topicbutton loadposts" id="'+topicID+'">'+topicname+'</button></div>\n\
+                            <div class="topicdescription" id="topic_description_'+topicID+'">'+topicdescription+'</div>\n\
+                            </div>\n\
+                            <div class="topicstatstitles">\n\
+                                Threads: <span id="thread_count_'+topicID+'" class="topicstats">'+topicpostcount+'</span><br/>\n\
+                                Replies: <span id="thread_count_'+topicID+'" class="topicstats">'+topicreplycount+'</span><br/>\n\
+                                Last Post: <span id="thread_count_'+topicID+'" class="topicstats">'+lastpostdate+'</span>\n\
+                            </div>\n\
+                        </div>\n\
+                    </div>');
+                    }    
+                }
+            });
+        }
+
+
+        $(document).on("click", ".loadposts", function() 
+        {
+
+            console.log('load posts in topic');
+
+
+
+            // set visible windows 
+            // this is the 'topics' function so we want topics visible and thread/posts hidden
+
+            $('.postwindow').css('display', 'none');
+            $('.threadwindow').css('display', 'none');
+            $('.topicwindow').css('display', 'none');
+            $('.loadingscreen').css('display', 'block');
+
+            // empty the demo content out of the topic window
+
+            $('.postwindow').empty();
+
+            var topicID = this.id;
+
+            // let's find the posts 
+            $.ajax({
+                type: "GET",
+                url: "./getbeefs.php",
+                data: {
+                    get_type: 'post',
+                    topic_id: topicID
+                },
+                success: function(response) 
+                {
+                    //$('.topicwindow').css('display', 'block');
+                    //$('.loadingscreen').css('display', 'none');
+                    
+                    console.log(response);
+
+                    // for (var i = 0; i < response.length; i++)
+                    // {
+                    //     var topicID = response[i]['id'];
+                    //     var topicname = response[i]['title'];
+                    //     var topicdescription = response[i]['description'];
+                    //     var topicpostcount = response[i]['posts'];
+                    //     var topicreplycount = response[i]['replies'];
+                    //     var lastpostdate = response[i]['lastpost'];
+                        
+                    //     $('.topicwindow').append('<div class="topicpackage" id="topicpackage_0">\n\
+                    //     <div class="topiccontainer">\n\
+                    //         <div class="topicdetails">\n\
+                    //         <div class="topiclinktitle" id="topic_name_'+topicID+'">\n\
+                    //         <button class="topicbutton loadposts" id="'+topicID+'">'+topicname+'</button></div>\n\
+                    //         <div class="topicdescription" id="topic_description_'+topicID+'">'+topicdescription+'</div>\n\
+                    //         </div>\n\
+                    //         <div class="topicstatstitles">\n\
+                    //             Threads: <span id="thread_count_'+topicID+'" class="topicstats">'+topicpostcount+'</span><br/>\n\
+                    //             Replies: <span id="thread_count_'+topicID+'" class="topicstats">'+topicreplycount+'</span><br/>\n\
+                    //             Last Post: <span id="thread_count_'+topicID+'" class="topicstats">'+lastpostdate+'</span>\n\
+                    //         </div>\n\
+                    //     </div>\n\
+                    // </div>');
+                    // }    
+                }
+            });
+
+            console.log(this.id);
+
+        });
+
+
+
+
+
+        // do onloads
+
+        load_topics();

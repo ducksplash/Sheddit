@@ -147,11 +147,21 @@ a:hover {
     background-color: #404040;
     color: #ffffff;
 }
-.profile_button:disabled {
+.topicbutton {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.3vw;
+    font-weight: bold;
+    border: none;
+}
+.topicbutton:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.topicbutton:disabled {
     background-color: #c0c0c0;
     color: #efefef;
     font-weight: bold;
-    text-decoration: none;
 }
 
 .replybutton {
@@ -234,7 +244,7 @@ label {
 }
 .postinput {
     width: 12vw;
-    font-size: 1.2vw;
+    font-size: 1.3vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
@@ -246,6 +256,29 @@ label {
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
+.postinputtextarea:hover {
+    height: 14vh;
+    color: #ffffff;
+    background-color: #404040;
+    resize: none;
+    font-size: 1.3vw;
+    width: 12vw;
+    border: 0.1px solid #404040;
+}
+.postinput:hover {
+    width: 12vw;
+    font-size: 1.2vw;
+    color: #ffffff;
+    background-color: #404040;
+    border: 0.1px solid #404040;
+}
+.signinput:hover {
+    width: 12vw;
+    font-size: 1.2vw;
+    color: #ffffff;
+    background-color: #404040;
+    border: 0.1px solid #404040;
+}
 select.postinput {
     width: 12.45vw;
     font-size: 1.2vw;
@@ -254,11 +287,40 @@ select.postinput {
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
+select.postinput:hover {
+    width: 12.45vw;
+    font-size: 1.2vw;
+    color: #ffffff;
+    padding: 0.5vw;
+    background-color: #404040;
+    border: 0.1px solid #404040;
+}
 select.postsort {
     font-size: 1.2vw;
     color: #404040;
     padding: 0.5vw;
     background-color: #ffffff;
+    border: 0.1px solid #404040;
+}
+select.postlimit {
+    font-size: 1.2vw;
+    color: #404040;
+    padding: 0.5vw;
+    background-color: #ffffff;
+    border: 0.1px solid #404040;
+}
+select.postsort:hover {
+    font-size: 1.2vw;
+    color: #ffffff;
+    padding: 0.5vw;
+    background-color: #404040;
+    border: 0.1px solid #404040;
+}
+select.postlimit:hover {
+    font-size: 1.2vw;
+    color: #ffffff;
+    padding: 0.5vw;
+    background-color: #404040;
     border: 0.1px solid #404040;
 }
 .charsleft {
@@ -274,20 +336,90 @@ select.postsort {
     padding: 4px;
 }
 
+
+
 .postwindow {
     height: 60vh;
     width: 40vw;
     overflow: auto;
     padding: 1vw;
-    display: block;
+    display: none;
 }
+
+
+
+.threadwindow {
+    height: 60vh;
+    width: 40vw;
+    overflow: auto;
+    padding: 1vw;
+    display: none;
+}
+
 
 .postpackage {
     display: block;
     margin-bottom: 10px;
 }
 
+.loadingscreen {
+    width: 100%;
+    height: 20vh;
+    vertical-align: middle;
+    margin: 0 auto;
+    padding-top: 8vh;
+    font-size: 1.4vw;
+    text-align: center;
+    display: none;
+}
 
+
+.topicwindow {
+    height: 50vh;
+    width: 40vw;
+    overflow: auto;
+    padding: 1vw;
+    display: block;
+}
+
+.topicpackage {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.topiccontainer {
+    border: 0.1px solid #909090;
+    padding: 1vw;
+    width: 36vw;
+    display: flex;
+    justify-content: space-between;
+}
+.topicdetails {
+    display: block;
+    width: 19vw;
+}
+.topicstatstitles {
+    font-weight: bold;
+    line-height: 1.5vw;
+    font-size: 1vw;
+    width: 16vw;
+}
+.topicstats {
+    font-weight: normal;
+    float: right;
+    padding-left: 0.6vw;
+    line-height: 1.5vw;
+    font-size: 1vw;
+}
+
+
+
+.topicdescription {
+    font-size: 1.1vw;
+    padding: 0.4vw;
+    font-weight: normal;
+    font-style: italic;
+}
 
 .displayreppost {
     width: 2vw; 
@@ -295,6 +427,7 @@ select.postsort {
     text-align: center; 
     vertical-align: middle;
 }
+
 .repreadingpost 
 {
     color: #404040;
@@ -321,13 +454,8 @@ select.postsort {
 .postlinkpreview {
     font-size: 1.2vw;
 }
-.threadwindow {
-    height: 60vh;
-    width: 40vw;
-    overflow: auto;
-    padding: 1vw;
-    display: none;
-}
+
+
 
 /* ===== Scrollbar CSS ===== */
   /* Firefox */
@@ -397,7 +525,8 @@ select.postsort {
     vertical-align: middle;
 }
 .displaypostroot {
-    width: 40vw; 
+    width: 32vw;
+    margin-left: 0.8vw; 
     padding: 0.8vw; 
     border: 0.1px solid #a0a0a0;
 }

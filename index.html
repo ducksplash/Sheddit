@@ -15,8 +15,8 @@
     Site Title
     </div>
     <div class="topictitle">Topic Title i.e. 'Films'.</div>
-    <div class="topicpath">/<a href="#" class="go_home" title="Front Page">front page</a>/<a href="#" class="go_up" title="Post List">Topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
-        <button class="gobackbutton">Go Back</button>
+    <div class="topicpath">/<a href="#" class="go_home loadtopics" title="Front Page">front page</a>/<a href="#" class="go_up" title="Post List">Topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="gobackbutton loadtopics">Go Back</button>
         
         
         
@@ -26,7 +26,7 @@
         <option value="1">Sort By Rep</option>
     </select>
         
-    <select name="post_limit" class="post_limit postsort" id="post_limit">
+    <select name="post_limit" class="post_limit postlimit" id="post_limit">
         <option disabled>Limit</option>
         <option value="20">20</option>
         <option value="50">50</option>
@@ -42,7 +42,6 @@
     
     <!-- main page body -->
     <div class="pageparent">
-
 
     <!-- posting body -->
 	<div class="postingbody">
@@ -86,6 +85,106 @@
     <div class="displayingbody">
 
         
+
+        <!-- loading screen -->
+
+        <div class="loadingscreen">
+            Loading<br/>
+            Please Wait
+        </div>
+        
+        <!-- /loading screen -->
+
+
+
+        <!-- topics window -->
+        <div id="topic_window" class="topicwindow">
+        
+
+            <div class="topicpackage" id="topicpackage_0">
+            
+                <div class="topiccontainer">
+                    <div class="topicdetails">
+                    <div class="topiclinktitle" id="topic_name_0">
+                    <button class="topicbutton" id="topic_button_0">Topic Name</button></div>
+                    <div class="topicdescription" id="topic_description_0">Topic Description that might need to drop onto a new line depending on some things</div>
+                    </div>
+    
+                    <div class="topicstatstitles">
+                        Threads: <span id="thread_count_0" class="topicstats">10</span><br/>
+                        Replies: <span id="thread_count_0" class="topicstats">170</span><br/>
+                        Last Post: <span id="thread_count_0" class="topicstats">January 27th, 1997</span>
+                    </div>
+                </div>
+    
+            </div>
+        
+            <div class="topicpackage" id="topicpackage_1">
+            
+                <div class="topiccontainer">
+                    <div class="topicdetails">
+                    <div class="topiclinktitle" id="topic_name_1">
+                    <button class="topicbutton" id="topic_button_1">Another Topic Name</button></div>
+                    <div class="topicdescription" id="topic_description_1">A different topic description this time</div>
+                    </div>
+    
+                    <div class="topicstatstitles">
+                        Threads: <span id="thread_count_1" class="topicstats">1</span><br/>
+                        Replies: <span id="thread_count_1" class="topicstats">12</span><br/>
+                        Last Post: <span id="thread_count_1" class="topicstats">August 13th, 2219</span>
+                    </div>
+                </div>
+    
+            </div>
+                
+        
+            <div class="topicpackage" id="topicpackage_2">
+            
+                <div class="topiccontainer">
+                    <div class="topicdetails">
+                    <div class="topiclinktitle" id="topic_name_2">
+                    <button class="topicbutton" id="topic_button_2">The Third Topic</button></div>
+                    <div class="topicdescription" id="topic_description_2">The third topic might go under the line</div>
+                    </div>
+    
+                    <div class="topicstatstitles">
+                        Threads: <span id="thread_count_2" class="topicstats">42</span><br/>
+                        Replies: <span id="thread_count_2" class="topicstats">91</span><br/>
+                        Last Post: <span id="thread_count_2" class="topicstats">December 22nd, 1970</span>
+                    </div>
+                </div>
+    
+            </div>
+        
+            <div class="topicpackage" id="topicpackage_2">
+            
+                <div class="topiccontainer">
+                    <div class="topicdetails">
+                    <div class="topiclinktitle" id="topic_name_3">
+                    <button class="topicbutton" id="topic_button_3">Topic Number Four</button></div>
+                    <div class="topicdescription" id="topic_description_3">What if a topic has a description so long it makes the panel stretch down for miles? Should it be curtailed? Is this a decent length? what about now? When is enough enough?</div>
+                    </div>
+    
+                    <div class="topicstatstitles">
+                        Threads: <span id="thread_count_3" class="topicstats">42</span><br/>
+                        Replies: <span id="thread_count_3" class="topicstats">91</span><br/>
+                        Last Post: <span id="thread_count_3" class="topicstats">December 22nd, 1970</span>
+                    </div>
+                </div>
+    
+            </div>
+                
+        </div>
+
+
+
+        <!-- / topics window -->
+
+
+
+        
+        <!-- posts window -->
+
 
         <div id="post_window" class="postwindow">
 
