@@ -26,7 +26,7 @@ a:hover {
     margin: 0 auto;
     background-color:teal;
     color: #ffffff;
-    padding: 3px;
+    padding: 0.5vw;
     height: 5%;
     font-size: 1.2vw;
     display: flex;
@@ -35,7 +35,7 @@ a:hover {
 }
 .sitetitle {
     color: #ffffff;
-    padding: 3px;
+    padding: 0.5vw;
     width: 12vw;
     font-size: 1.6vw;
     font-weight: bold;
@@ -43,7 +43,7 @@ a:hover {
 
 .topictitle {
     color: #ffffff;
-    padding: 3px;
+    padding: 0.5vw;
     width: 20vw;
     font-size: 1.3vw;
     font-weight: bold;
@@ -55,7 +55,7 @@ a:hover {
     color: #ffffff;
     font-weight: bold;
     font-size: 1.4vw;
-    padding: 3px;
+    padding: 0.5vw;
 }
 
 .pagefooter {
@@ -63,7 +63,7 @@ a:hover {
     margin: 0 auto;
     background-color:teal;
     color: #ffffff;
-    padding: 3px;
+    padding: 0.5vw;
     height: 5%;
     font-size: 1.2vw;
     display: flex;
@@ -72,7 +72,7 @@ a:hover {
 }
 .siteby {
     color: #ffffff;
-    padding: 3px;
+    padding: 0.5vw;
     width: 12vw;
     font-size: 1vw;
     font-weight: bold;
@@ -80,7 +80,7 @@ a:hover {
 
 .copyright {
     color: #ffffff;
-    padding: 3px;
+    padding: 0.5vw;
     width: 20vw;
     font-size: 1vw;
     font-weight: bold;
@@ -92,7 +92,7 @@ a:hover {
     color: #ffffff;
     font-weight: bold;
     font-size: 1vw;
-    padding: 3px;
+    padding: 0.5vw;
 }
 .gobackbutton {
     background-color: #FFFFFF;
@@ -101,7 +101,7 @@ a:hover {
     font-weight: semi-bold;
     text-decoration: none;
     border: 0.1px solid #606060;
-    padding: 3px;
+    padding: 0.5vw;
 }
 .gobackbutton:hover {
     background-color: #404040;
@@ -161,7 +161,7 @@ a:hover {
     font-weight: semi-bold;
     text-decoration: none;
     border: 0.1px solid #606060;
-    padding: 1px;
+    padding: 0.2vw;
     width: 5vw;
 }
 .replybutton:hover {
@@ -183,7 +183,7 @@ a:hover {
     font-weight: semi-bold;
     text-decoration: none;
     border:  0.1px solid #606060;
-    padding: 1px;
+    padding: 0.2vw;
     width: 5vw;
 }
 .deletebutton:hover {
@@ -217,11 +217,11 @@ label {
 }
 .postingbody {
     color: #404040;
-    width: 18vw;
+    width: 16vw;
     margin: 0 auto;
-    margin-right: 10px;
+    margin-right: 0.8vw;
     text-align: center;
-    padding: 10px;
+    padding: 1vw;
     border: 0.1px solid #909090;
 }
 .postinputtextarea {
@@ -230,28 +230,28 @@ label {
     background-color: #ffffff;
     resize: none;
     font-size: 1.3vw;
-    width: 16vw;
+    width: 15vw;
     border: 0.1px solid #404040;
 }
 .postinput {
-    width: 16vw;
+    width: 15vw;
     font-size: 1.2vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
 .signinput {
-    width: 10vw;
+    width: 9vw;
     font-size: 1.2vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
 select.postinput {
-    width: 16.45vw;
+    width: 15.45vw;
     font-size: 1.2vw;
     color: #404040;
-    padding: 3px;
+    padding: 0.5vw;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
@@ -273,7 +273,7 @@ select.postinput {
     height: 60vh;
     width: 45vw;
     overflow: auto;
-    padding: 10px;
+    padding: 1vw;
     display: block;
 }
 
@@ -297,11 +297,27 @@ select.postinput {
     margin-top: 10px;
     line-height: 20px;
 }
+.postslab {
+    border: 0.1px solid #909090;
+    padding: 1vw;
+    width: 40vw;
+    display: flex;
+}
+.postslabinner {
+    margin-left: 1vw;
+}
+.postlinktitle {
+    font-size: 1.4vw;
+    font-weight: bold;
+}
+.postlinkpreview {
+    font-size: 1.2vw;
+}
 .threadwindow {
     height: 60vh;
-    width: 45vw;
+    width: 40vw;
     overflow: auto;
-    padding: 10px;
+    padding: 1vw;
     display: none;
 }
 
@@ -330,6 +346,7 @@ select.postinput {
 
 .displayingbody {
     font-size: 1vw;
+    width: 45vw;
     font-weight: bold;
     color: #404040;
     background-color: #ffffff;
@@ -342,11 +359,11 @@ select.postinput {
     font-size: 1vw;
     font-weight: bold;
     color: #404040;
-    width: 18vw;
+    width: 16vw;
     margin: 0 auto;
-    margin-left: 10px;
+    margin-left: 0.8vw;
     text-align: left;
-    padding: 10px;
+    padding: 1vw;
     border: 0.1px solid #909090;
 }
 
@@ -364,7 +381,7 @@ select.postinput {
     display: flex; 
     align-items:flex-start;
     margin-top: 10px;
-    margin-left: 20px;
+    margin-left: 1.2vw;
 }
 .displayrep {
     width: 2vw; 
@@ -373,7 +390,7 @@ select.postinput {
 }
 .displaypostroot {
     width: 40vw; 
-    padding: 6px; 
+    padding: 0.8vw; 
     border: 0.1px solid #a0a0a0;
 }
 
