@@ -333,7 +333,6 @@ select.postlimit:hover {
 
 .account {
     font-size: 1.2vw;
-    padding: 4px;
 }
 
 
@@ -375,7 +374,7 @@ select.postlimit:hover {
 
 
 .topicwindow {
-    height: 50vh;
+    height: 60vh;
     width: 40vw;
     overflow: auto;
     padding: 1vw;
@@ -422,7 +421,7 @@ select.postlimit:hover {
 }
 
 .displayreppost {
-    width: 2vw; 
+    width: 3vw; 
     line-height: 5px;
     text-align: center; 
     vertical-align: middle;
@@ -445,14 +444,13 @@ select.postlimit:hover {
     display: flex;
 }
 .postslabinner {
-    margin-left: 1vw;
+    margin-left: 1.2vw;
 }
-.postlinktitle {
-    font-size: 1.4vw;
-    font-weight: bold;
-}
+
 .postlinkpreview {
     font-size: 1.2vw;
+    padding: 0.2vw;
+    margin-top: 10px;
 }
 
 
@@ -511,7 +509,6 @@ select.postlimit:hover {
     font-size: 1.2vw;
     font-weight: bold;
     font-style: italic;
-    padding-bottom: 4px;
 }
 .displayreply {
     display: flex; 

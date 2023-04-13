@@ -62,7 +62,7 @@ if ($get_type === 'post')
     
     
     // still need to finish query to add limit, start, sort...
-    $query = "SELECT * FROM items WHERE tid=$topic_id AND lineage='post' ORDER BY id ASC";
+    $query = "SELECT * FROM items WHERE tid=$topic_id AND lineage='post' ORDER BY date_modified DESC";
     $result = mysqli_query($database_connection, $query);
 
     $topiccounter = 0;

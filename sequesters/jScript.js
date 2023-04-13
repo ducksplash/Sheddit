@@ -5,6 +5,12 @@
         var file_b64_body = '';
         var title_ready = false;
         var post_ready = false;
+        var initialised = false;
+
+        if (!initialised)
+        {
+            load_topics();
+        }
         
         $(document).ready(function()
         {
@@ -390,7 +396,7 @@
                         <div class="topiccontainer">\n\
                             <div class="topicdetails">\n\
                             <div class="topiclinktitle" id="topic_name_'+topicID+'">\n\
-                            <button class="topicbutton loadposts" id="'+topicID+'">'+topicname+'</button></div>\n\
+                            <button class="topicbutton loadposts" id="'+topicID+'" name="'+topicname+'">'+topicname+'</button></div>\n\
                             <div class="topicdescription" id="topic_description_'+topicID+'">'+topicdescription+'</div>\n\
                             </div>\n\
                             <div class="topicstatstitles">\n\
@@ -426,6 +432,17 @@
             $('.postwindow').empty();
 
             var topicID = this.id;
+            var topicname = this.name;
+
+            console.log(topicname);
+
+            var shortTopicName = (topicname.length > 20) ? topicname.substring(0, 17) + '...' : topicname;
+
+            
+            $('.topictitle').text(shortTopicName);
+            $('.pathtotopic').text(shortTopicName);
+
+
 
             // let's find the posts 
             $.ajax({
@@ -437,35 +454,40 @@
                 },
                 success: function(response) 
                 {
-                    //$('.topicwindow').css('display', 'block');
-                    //$('.loadingscreen').css('display', 'none');
+                    $('.loadingscreen').css('display', 'none');
+                    $('.postwindow').css('display', 'block');
                     
                     console.log(response);
 
-                    // for (var i = 0; i < response.length; i++)
-                    // {
-                    //     var topicID = response[i]['id'];
-                    //     var topicname = response[i]['title'];
-                    //     var topicdescription = response[i]['description'];
-                    //     var topicpostcount = response[i]['posts'];
-                    //     var topicreplycount = response[i]['replies'];
-                    //     var lastpostdate = response[i]['lastpost'];
-                        
-                    //     $('.topicwindow').append('<div class="topicpackage" id="topicpackage_0">\n\
-                    //     <div class="topiccontainer">\n\
-                    //         <div class="topicdetails">\n\
-                    //         <div class="topiclinktitle" id="topic_name_'+topicID+'">\n\
-                    //         <button class="topicbutton loadposts" id="'+topicID+'">'+topicname+'</button></div>\n\
-                    //         <div class="topicdescription" id="topic_description_'+topicID+'">'+topicdescription+'</div>\n\
-                    //         </div>\n\
-                    //         <div class="topicstatstitles">\n\
-                    //             Threads: <span id="thread_count_'+topicID+'" class="topicstats">'+topicpostcount+'</span><br/>\n\
-                    //             Replies: <span id="thread_count_'+topicID+'" class="topicstats">'+topicreplycount+'</span><br/>\n\
-                    //             Last Post: <span id="thread_count_'+topicID+'" class="topicstats">'+lastpostdate+'</span>\n\
-                    //         </div>\n\
-                    //     </div>\n\
-                    // </div>');
-                    // }    
+                    for (var i = 0; i < response.length; i++)
+                    {
+
+                        var postID = response[i]['id'];
+                        var posttitle = response[i]['title'];
+                        var postbody = response[i]['body'];
+                        var postreplies = response[i]['replies'];
+                        var postrep = response[i]['reputation'];
+
+                        console.log(postID);
+                        console.log(posttitle);
+                        console.log(postbody);
+                        console.log(postreplies);
+
+                        $('.postwindow').append('<div class="postpackage" id="postpackage_'+postID+'">\n\
+                            <div class="postslab">\n\
+                                <div id="reppanelpost" class="displayreppost">\n\
+                                    <button class="arrow up" title="Add Rep"> </button><br/>\n\
+                                    <span id="doot" class="repreadingpost">'+postrep+'</span><br/>\n\
+                                    <button class="arrow down" title="Reduce Rep"> </button>\n\
+                                </div>\n\
+                                <div class="postslabinner">\n\
+                                <div class="postlinktitle"><button class="topicbutton loadcomments" id="'+postID+'">'+posttitle+'</button></div>\n\
+                                <div class="postlinkpreview">'+postbody+'</div>\n\
+                                </div>\n\
+                            </div>\n\
+                        </div>');
+                
+                    }    
                 }
             });
 
@@ -478,5 +500,5 @@
 
 
         // do onloads
-
-        load_topics();
+        
+        //load_topics();

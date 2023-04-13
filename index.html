@@ -15,15 +15,15 @@
     Site Title
     </div>
     <div class="topictitle">Topic Title i.e. 'Films'.</div>
-    <div class="topicpath">/<a href="#" class="go_home loadtopics" title="Front Page">front page</a>/<a href="#" class="go_up" title="Post List">Topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="topicpath">/<a href="#" class="go_home loadtopics" title="Front Page">front page</a>/<a href="#" class="go_up pathtotopic" title="Post List">Topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
         <button class="gobackbutton loadtopics">Go Back</button>
         
         
         
     <select name="sort_by" class="sort_by postsort" id="sort_by">
         <option disabled>-- Sort By --</option>
-        <option value="0">Sort By New</option>
         <option value="1">Sort By Rep</option>
+        <option value="0">Sort By New</option>
     </select>
         
     <select name="post_limit" class="post_limit postlimit" id="post_limit">
@@ -45,6 +45,9 @@
 
     <!-- posting body -->
 	<div class="postingbody">
+
+    <div style="font-size: 1.2vw; color: #404040; text-align: center; font-weight: bold;">Create New<br/>Thread</div><br/>
+
     <label for="title_input">Title</label><br/>
     <input id="title_input" type="text" placeholder="title" maxlength="1000" class="postinput"/><br/>
     <span class="charsleft charsleft_title">100</span>
