@@ -15,6 +15,7 @@ $search_query = (isset($_POST['search_query'])) ? make_valid_string($_POST['sear
 //print($file_string);
 //die();
 
+// still need to finish query to add limit, start, sort...
 $query = "SELECT * FROM items ORDER BY date_modified DESC";
 $result = mysqli_query($database_connection, $query);
 $rowset = mysqli_fetch_all($result, MYSQLI_ASSOC);

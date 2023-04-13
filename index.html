@@ -12,12 +12,29 @@
     <!-- header panel-->
     <div class="pageheader">
     <div class="sitetitle">
-    some test text
+    Site Title
     </div>
-    <div class="topictitle">30 Character Long Topic Title!</div>
-    <div class="topicpath">/<a href="#" class="go_home" title="Front Page">main</a>/<a href="#" class="go_up" title="Post List">topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="gobackbutton">Go Back</button></div>
-    
+    <div class="topictitle">Topic Title i.e. 'Films'.</div>
+    <div class="topicpath">/<a href="#" class="go_home" title="Front Page">front page</a>/<a href="#" class="go_up" title="Post List">Topic</a>/thread_title&nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="gobackbutton">Go Back</button>
+        
+        
+        
+    <select name="sort_by" class="sort_by postsort" id="sort_by">
+        <option disabled>-- Sort By --</option>
+        <option value="0">Sort By New</option>
+        <option value="1">Sort By Rep</option>
+    </select>
+        
+    <select name="post_limit" class="post_limit postsort" id="post_limit">
+        <option disabled>Limit</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="500">500</option>
+    </select>
+    </div>
     </div>
 
     <!-- / header panel -->
@@ -35,7 +52,7 @@
     <br/>
     <br/>
     <label for="post_type">Post Type</label><br/>
-    <select name="post_type" class="post_type postinput" id="post_type" class="postinput">
+    <select name="post_type" class="post_type postinput" id="post_type">
         <option disabled>-- Select Post Type --</option>
         <option value="0">Text</option>
         <option value="1">Link</option>
@@ -72,20 +89,75 @@
 
         <div id="post_window" class="postwindow">
 
-        <div class="postitems">
-            <div class="postslab">
-            <div id="reppanelpost" class="displayreppost">
-                <button class="arrow up" title="Add Rep"> </button><br/>
-                <span id="doot" class="repreadingpost">1</span><br/>
-                <button class="arrow down" title="Reduce Rep"> </button>
+            <div class="postpackage" id="postpackage_0">
+                <div class="postslab">
+                    <div id="reppanelpost" class="displayreppost">
+                        <button class="arrow up" title="Add Rep"> </button><br/>
+                        <span id="doot" class="repreadingpost">1</span><br/>
+                        <button class="arrow down" title="Reduce Rep"> </button>
+                    </div>
+                    <div class="postslabinner">
+                        <div class="postlinktitle">Title Of Post</div><br/>
+                        <div class="postlinkpreview">The first 20 or so characters</div>
+                    </div>
+                </div> 
             </div>
-            <div class="postslabinner">
-                <div class="postlinktitle">Title Of Post</div><br/>
-                <div class="postlinkpreview">The first 20 or so characters</div>
-            </div>
-        </div>            
-        </div>
 
+            <div class="postpackage" id="postpackage_1">
+                <div class="postslab">
+                    <div id="reppanelpost" class="displayreppost">
+                        <button class="arrow up" title="Add Rep"> </button><br/>
+                        <span id="doot" class="repreadingpost">10</span><br/>
+                        <button class="arrow down" title="Reduce Rep"> </button>
+                    </div>
+                    <div class="postslabinner">
+                        <div class="postlinktitle">Second Post</div><br/>
+                        <div class="postlinkpreview">A brief piece, trimmed at around 20 char...</div>
+                    </div>
+                </div>                             
+            </div>
+
+            <div class="postpackage" id="postpackage_2">
+                <div class="postslab">
+                    <div id="reppanelpost" class="displayreppost">
+                        <button class="arrow up" title="Add Rep"> </button><br/>
+                        <span id="doot" class="repreadingpost">140</span><br/>
+                        <button class="arrow down" title="Reduce Rep"> </button>
+                    </div>
+                    <div class="postslabinner">
+                        <div class="postlinktitle">Third Post</div><br/>
+                        <div class="postlinkpreview">Gotta see if the page scrolls right y'know?</div>
+                    </div>
+                </div>                             
+            </div>
+
+            <div class="postpackage" id="postpackage_3">
+                <div class="postslab">
+                    <div id="reppanelpost" class="displayreppost">
+                        <button class="arrow up" title="Add Rep"> </button><br/>
+                        <span id="doot" class="repreadingpost">81</span><br/>
+                        <button class="arrow down" title="Reduce Rep"> </button>
+                    </div>
+                    <div class="postslabinner">
+                        <div class="postlinktitle">Number 4</div><br/>
+                        <div class="postlinkpreview">Do they all fit inside the window?</div>
+                    </div>
+                </div>                             
+            </div>
+
+            <div class="postpackage" id="postpackage_4">
+                <div class="postslab">
+                    <div id="reppanelpost" class="displayreppost">
+                        <button class="arrow up" title="Add Rep"> </button><br/>
+                        <span id="doot" class="repreadingpost">98</span><br/>
+                        <button class="arrow down" title="Reduce Rep"> </button>
+                    </div>
+                    <div class="postslabinner">
+                        <div class="postlinktitle">Post 5</div><br/>
+                        <div class="postlinkpreview">This might be the last one</div>
+                    </div>
+                </div>                             
+            </div>
         </div>
         <!-- thread window (dynamic area)-->
 
@@ -163,7 +235,7 @@
         
         <!-- account (dynamic area) -->
         <div class="account" id="account">
-        <div style="font-size: 1.2vw; color: #404040;">Sign In<br/>Or Register</div><br/>
+        <div style="font-size: 1.2vw; color: #404040; text-align: center;">Sign In<br/>Or Register</div><br/>
 
 
         <label for="username_input">Username</label><br/>

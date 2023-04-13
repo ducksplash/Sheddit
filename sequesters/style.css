@@ -36,7 +36,7 @@ a:hover {
 .sitetitle {
     color: #ffffff;
     padding: 0.5vw;
-    width: 12vw;
+    width: auto;
     font-size: 1.6vw;
     font-weight: bold;
 }
@@ -44,14 +44,14 @@ a:hover {
 .topictitle {
     color: #ffffff;
     padding: 0.5vw;
-    width: 20vw;
+    width: auto;
     font-size: 1.3vw;
     font-weight: bold;
 }
 
 .topicpath {
     text-align: right;
-    width: 40vw;
+    width: auto;
     color: #ffffff;
     font-weight: bold;
     font-size: 1.4vw;
@@ -204,7 +204,6 @@ label {
     font-size: 1.2vw;
     font-weight: bold;
     color: #404040;
-    float: left;
     padding-bottom: 6px;
 }
 .pageparent {
@@ -220,7 +219,7 @@ label {
     width: 16vw;
     margin: 0 auto;
     margin-right: 0.8vw;
-    text-align: center;
+    text-align: left;
     padding: 1vw;
     border: 0.1px solid #909090;
 }
@@ -230,25 +229,32 @@ label {
     background-color: #ffffff;
     resize: none;
     font-size: 1.3vw;
-    width: 15vw;
+    width: 12vw;
     border: 0.1px solid #404040;
 }
 .postinput {
-    width: 15vw;
+    width: 12vw;
     font-size: 1.2vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
 .signinput {
-    width: 9vw;
+    width: 12vw;
     font-size: 1.2vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
 select.postinput {
-    width: 15.45vw;
+    width: 12.45vw;
+    font-size: 1.2vw;
+    color: #404040;
+    padding: 0.5vw;
+    background-color: #ffffff;
+    border: 0.1px solid #404040;
+}
+select.postsort {
     font-size: 1.2vw;
     color: #404040;
     padding: 0.5vw;
@@ -265,27 +271,27 @@ select.postinput {
 
 .account {
     font-size: 1.2vw;
-    text-align: center;
     padding: 4px;
 }
 
 .postwindow {
     height: 60vh;
-    width: 45vw;
+    width: 40vw;
     overflow: auto;
     padding: 1vw;
     display: block;
 }
 
-.postitems {
-    display: flex; 
-    align-items:flex-start;
+.postpackage {
+    display: block;
+    margin-bottom: 10px;
 }
 
 
 
-.displayrep {
+.displayreppost {
     width: 2vw; 
+    line-height: 5px;
     text-align: center; 
     vertical-align: middle;
 }
@@ -293,14 +299,16 @@ select.postinput {
 {
     color: #404040;
     font-weight: bold;
-    font-size: 1.3vw;
+    font-size: 1vw;
     margin-top: 10px;
+    text-align: center;
+    margin: 0 auto;
     line-height: 20px;
 }
 .postslab {
     border: 0.1px solid #909090;
     padding: 1vw;
-    width: 40vw;
+    width: 36vw;
     display: flex;
 }
 .postslabinner {
