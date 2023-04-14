@@ -340,8 +340,8 @@
 
         }
 
-
-        $(".loadtopics").click(function() {
+        $(document).on("click", ".loadtopics", function() 
+        {
             console.log('load topics by click');
             load_topics();
         });
@@ -365,7 +365,10 @@
 
             $('.topicwindow').empty();
 
-            $('.topictitle').text("All topics (home)");
+
+            $('.topicpathtext').empty();
+
+            $('.topicpathtext').append("/front page/&nbsp;&nbsp;&nbsp;&nbsp;");
 
             // set 
 
@@ -436,14 +439,6 @@
 
             console.log(topicname);
 
-            var shortTopicName = (topicname.length > 20) ? topicname.substring(0, 17) + '...' : topicname;
-
-            
-            $('.topictitle').text(shortTopicName);
-            $('.pathtotopic').text(shortTopicName);
-
-
-
             // let's find the posts 
             $.ajax({
                 type: "GET",
@@ -456,7 +451,16 @@
                 {
                     $('.loadingscreen').css('display', 'none');
                     $('.postwindow').css('display', 'block');
+
+                        
+                    var titletopicname = (topicname.length > 30) ? topicname.substring(0, 30) + '...' : topicname;
+                    var pathtopicname = (topicname.length > 20) ? topicname.substring(0, 20) + '...' : topicname; 
                     
+                    $('.topicpathtext').empty();
+
+                    $('.topicpathtext').append("/<a href=\"#\" class=\"go_home loadtopics\" title=\"Front Page\">front page</a>/"+pathtopicname+"&nbsp;&nbsp;&nbsp;&nbsp;");
+        
+
                     console.log(response);
 
                     for (var i = 0; i < response.length; i++)
