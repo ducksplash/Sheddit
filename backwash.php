@@ -9,6 +9,7 @@ include('./dababase_connection.php');
 
 $post_type = (isset($_POST['post_type'])) ? (int)$_POST['post_type'] : 0;
 $title_string = (isset($_POST['post_title'])) ? make_valid_string($_POST['post_title']) : '';
+$topic_id = (isset($_POST['post_topic'])) ? $_POST['post_topic'] : 0;
 $post_string = (isset($_POST['post_body'])) ? make_valid_string($_POST['post_body']) : '';
 $link_string = (isset($_POST['post_link'])) ? make_valid_string($_POST['post_link']) : '';
 $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_body']) : '';
@@ -24,7 +25,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     if ($post_type === 0 || $post_type == "")
     {
 
-      $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string);
+      $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string, $topic_id);
       
     } 
 
@@ -32,7 +33,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     if ($post_type === 1)
     {
 
-      $post_result = insert_link($database_connection, $ownerID, $title_string, $link_string);
+      $post_result = insert_link($database_connection, $ownerID, $title_string, $link_string, $topic_id);
       
     } 
 
@@ -40,7 +41,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     if ($post_type === 2)
     {
 
-      $post_result = insert_file($database_connection, $ownerID, $title_string, $file_string);
+      $post_result = insert_file($database_connection, $ownerID, $title_string, $file_string, $topic_id);
       
     } 
 
@@ -83,7 +84,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert text post
 
-  function insert_post($dbc, $ownerID, $title, $body) 
+  function insert_post($dbc, $ownerID, $title, $body, $tid) 
   {
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
@@ -110,8 +111,8 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         else 
         {
             // Construct the SQL query to insert the new item
-            $sql_insert = "INSERT INTO items (ownerID, title, body, date_created, date_modified) 
-            VALUES ('$ownerID', '$title_trimmed', '$body_trimmed', NOW(), NOW())";
+            $sql_insert = "INSERT INTO items (ownerID, title, body, date_created, date_modified, tid) 
+            VALUES ('$ownerID', '$title_trimmed', '$body_trimmed', NOW(), NOW(), '$tid')";
     
             // Execute the SQL query
             if (mysqli_query($dbc, $sql_insert)) 
@@ -133,7 +134,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert file post
 
-  function insert_file($dbc, $ownerID, $title, $filestring) 
+  function insert_file($dbc, $ownerID, $title, $filestring, $tid) 
   {
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
@@ -193,8 +194,8 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
           else 
           {
               // Construct the SQL query to insert the new item
-              $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, extension, date_created, date_modified) 
-              VALUES ('$ownerID', 2, '$title_trimmed', '$filestring', '$extension', NOW(), NOW())";
+              $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, extension, date_created, date_modified, tid) 
+              VALUES ('$ownerID', 2, '$title_trimmed', '$filestring', '$extension', NOW(), NOW(), '$tid')";
       
               // Execute the SQL query
               if (mysqli_query($dbc, $sql_insert)) 
@@ -222,7 +223,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert link post
 
-  function insert_link($dbc, $ownerID, $title, $linkurl) 
+  function insert_link($dbc, $ownerID, $title, $linkurl, $tid) 
   {
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
@@ -256,8 +257,8 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         else 
         {
             // Construct the SQL query to insert the new item
-            $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, date_created, date_modified) 
-            VALUES ('$ownerID', 1, '$title_trimmed', '$linkurl_trimmed', NOW(), NOW())";
+            $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, date_created, date_modified, tid) 
+            VALUES ('$ownerID', 1, '$title_trimmed', '$linkurl_trimmed', NOW(), NOW(), '$tid')";
     
             // Execute the SQL query
             if (mysqli_query($dbc, $sql_insert)) 

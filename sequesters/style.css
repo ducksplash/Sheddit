@@ -30,32 +30,35 @@ a:hover {
     height: 5%;
     font-size: 1.2vw;
     display: flex;
-    align-items: center;
-    justify-content:space-between;
 }
 .sitetitle {
     color: #ffffff;
     padding: 0.5vw;
-    width: auto;
+    width: 18vw;
     font-size: 1.6vw;
     font-weight: bold;
+}
+.pathandtitle {
+    text-align: left;
+    width: 36vw;
+
 }
 
 .topictitle {
     color: #ffffff;
-    padding: 0.5vw;
-    width: auto;
     font-size: 1.3vw;
     font-weight: bold;
 }
 
 .topicpath {
-    text-align: right;
-    width: auto;
     color: #ffffff;
     font-weight: bold;
     font-size: 1vw;
-    padding: 0.5vw;
+}
+.buttonsrow {
+    width: 40vw;
+    float: right;
+    text-align: right;
 }
 
 .pagefooter {
@@ -152,6 +155,7 @@ a:hover {
     color: #404040;
     font-size: 1.3vw;
     font-weight: bold;
+    text-align: left;
     border: none;
 }
 .topicbutton:hover {
@@ -266,11 +270,8 @@ label {
     border: 0.1px solid #404040;
 }
 .postinput:hover {
-    width: 12vw;
-    font-size: 1.2vw;
     color: #ffffff;
     background-color: #404040;
-    border: 0.1px solid #404040;
 }
 .signinput:hover {
     width: 12vw;
@@ -291,7 +292,6 @@ select.postinput:hover {
     width: 12.45vw;
     font-size: 1.2vw;
     color: #ffffff;
-    padding: 0.5vw;
     background-color: #404040;
     border: 0.1px solid #404040;
 }
@@ -327,7 +327,6 @@ select.postlimit:hover {
     font-weight: normal;
     font-size: 1vw;
     font-style: italic;
-    padding-top: 4px;
     float: left;
 }
 
@@ -338,7 +337,7 @@ select.postlimit:hover {
 
 
 .postwindow {
-    height: 60vh;
+    height: 70vh;
     width: 40vw;
     overflow: auto;
     padding: 1vw;
@@ -348,7 +347,7 @@ select.postlimit:hover {
 
 
 .threadwindow {
-    height: 60vh;
+    height: 70vh;
     width: 40vw;
     overflow: auto;
     padding: 1vw;
@@ -374,7 +373,7 @@ select.postlimit:hover {
 
 
 .topicwindow {
-    height: 60vh;
+    height: 70vh;
     width: 40vw;
     overflow: auto;
     padding: 1vw;
@@ -450,9 +449,30 @@ select.postlimit:hover {
 .postlinkpreview {
     font-size: 1.2vw;
     padding: 0.2vw;
-    margin-top: 10px;
+    width: 30vw;
+}
+.postimgpreview {
+    font-size: 1.2vw;
+    width: 30vw;
+    text-align: right;
+    align-items: end;
+}
+.posttextpreview {
+    font-size: 1.2vw;
+    padding: 0.2vw;
+    width: 30vw;
 }
 
+
+.postimg {
+    width: 10vw;
+}
+.previewimg {
+    width: 8vw;
+    padding: 0;
+    position: relative;
+    top: -10px;
+}
 
 
 /* ===== Scrollbar CSS ===== */

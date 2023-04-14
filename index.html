@@ -14,8 +14,11 @@
     <div class="sitetitle">
     Site Title
     </div>
-    <div class="topictitle">Topic Title i.e. 'Films'.</div>
-    <div class="topicpath"><span class="topicpathtext"></span>
+    <div class="pathandtitle">
+        <div class="topictitle">Topic Title i.e. 'Films'.</div>
+        <div class="topicpath"><span class="topicpathtext"></span></div>
+    </div>
+    <div class="buttonsrow">
         <button class="gobackbutton loadtopics">Go Back</button>
         
         
@@ -59,6 +62,13 @@
         <option value="0">Text</option>
         <option value="1">Link</option>
         <option value="2">Image</option>
+    </select>
+    <br/>
+    <br/>
+    <label for="post_topic">Select Topic</label><br/>
+    <select name="post_topic" class="post_topic postinput" id="post_topic">
+        <option disabled>-- Select Topic --</option>
+        <!-- set by function: -->
     </select>
     <br/>
     <br/>
