@@ -53,7 +53,6 @@
                 success: function(response)
                 {
 
-                    console.log(response);
                     if(response.status == 200)
                     {
                         $("#resso").text(makeValidString(response));
@@ -119,7 +118,6 @@
                     break;
                 }
 
-                console.log(selectedValue);
             }
 
             
@@ -183,7 +181,6 @@
         // check post body
         $(document).on("input", ".body_input", function() 
         {
-            console.log("input");
             var body = $(this).val();
 
             var body_length = body.length;
@@ -212,7 +209,6 @@
         // check link body
         $(document).on("input", ".link_input", function() 
         {
-            console.log("input");
             var link = $(this).val();
 
             var pattern = new RegExp('((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -346,14 +342,12 @@
 
         $(document).on("click", ".loadtopics", function() 
         {
-            console.log('load topics click');
             load_topics();
         });
 
         
         function load_topics()
         {
-            console.log('load topics');
 
 
             // set visible windows 
@@ -363,6 +357,7 @@
             $('.threadwindow').css('display', 'none');
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
+            $('.loadingscreen').html('Fetching Content<br/>Please Wait');
 
             // empty the demo content out of the topic window
 
@@ -373,9 +368,12 @@
 
             $('.topicpathtext').append("/front page/&nbsp;&nbsp;&nbsp;&nbsp;");
 
+            // set title in header strip
             $('.topictitle').text("Home");
 
-            // set 
+            // empty topic list
+            $('.post_topic').empty();
+
 
             // let's find the topics 
             $.ajax({
@@ -389,7 +387,6 @@
                     $('.topicwindow').css('display', 'block');
                     $('.loadingscreen').css('display', 'none');
                     
-                    console.log(response.length);
 
                     for (var i = 0; i < response.length; i++)
                     {
@@ -423,10 +420,11 @@
         }
 
 
+
+
+
         $(document).on("click", ".loadposts", function() 
         {
-
-            console.log('load posts in given topic');
 
             // set visible windows 
             // this is the 'posts' function so we want posts visible and thread/topics hidden
@@ -435,11 +433,12 @@
             $('.threadwindow').css('display', 'none');
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
+            $('.loadingscreen').html('Fetching Content<br/>Please Wait');
 
             // empty the demo content out of the topic window
             //
-
             $('.postwindow').empty();
+
 
             // get topic id and topic name
             // getting topic name here seems shonky
@@ -459,7 +458,16 @@
                     $('.loadingscreen').css('display', 'none');
                     $('.postwindow').css('display', 'block');
 
-                    console.log(response);
+                    if (response.length == 0)
+                    {
+                        console.log('non');
+                        $('.loadingscreen').css('display', 'block');
+                        $('.loadingscreen').text('No posts here.');
+                    }
+                    $('.topicpathtext').empty();
+
+                    $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page"">front page</a>/&nbsp;&nbsp;&nbsp;&nbsp;');
+
 
                     for (var i = 0; i < response.length; i++)
                     {
@@ -473,7 +481,7 @@
                             
                             $('.topicpathtext').empty();
         
-                            $('.topicpathtext').append("/<a href=\"#\" class=\"go_home loadtopics\" title=\"Front Page\">front page</a>/"+pathtopicname+"/&nbsp;&nbsp;&nbsp;&nbsp;");
+                            $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page" name="'+topicname+'">front page</a>/'+pathtopicname+'/&nbsp;&nbsp;&nbsp;&nbsp;');
                 
                             // set topic name in title bar
                             $('.topictitle').text(titletopicname);
@@ -483,23 +491,25 @@
                         var postID = response[i]['id'];
                         var posttitle = response[i]['title'];
                         var postbody = response[i]['body'];
-                        var posttype = response[i]['item_type'];
+                        var posttype = parseInt(response[i]['item_type']);
                         var postreplies = response[i]['replies'];
                         var postrep = response[i]['reputation'];
 
+                        console.log('item type'+posttype);
+
                         var postinsert = '';
-                        var linkpost = "<div class='postlinkpreview'></div>";
-                        var imgpost = "<div class='postimgpreview'><img class='previewimg loadcomments' id='"+postID+"' src='data:image/png;base64,"+postbody+"' alt='"+posttitle+"' /></div>";
+                        var linkpost = "<div class='postlinkpreview'>No Preview Available</div>";
+                        var imgpost = "<div class='postimgpreview' id='"+topicID+"'><img class='previewimg loadcomments' id='"+postID+"' src='data:image/png;base64,"+postbody+"' name='"+topicname+"' alt='"+posttitle+"' /></div>";
                         var textpost = "<div class='posttextpreview'>"+postbody+"</div>";
     
                         
     
                         switch (posttype) 
                         {
-                            case "1":
+                            case 1:
                             postinsert = linkpost;
                             break;
-                            case "2":
+                            case 2:
                             postinsert = imgpost;
                             break;
                             default:
@@ -507,10 +517,6 @@
                             break;
                         }
 
-                        console.log(postID);
-                        console.log(posttitle);
-                        console.log(postbody);
-                        console.log(postreplies);
 
                         $('.postwindow').append('<div class="postpackage" id="postpackage_'+postID+'">\n\
                             <div class="postslab">\n\
@@ -530,20 +536,11 @@
                 }
             });
 
-            console.log(this.id);
-
         });
-
-
-
-
-
 
 
         $(document).on("click", ".loadcomments", function() 
         {
-
-            console.log('load posts in given topic');
 
             // set visible windows 
             // this is the 'threads' function so we want threads visible and topics/posts hidden
@@ -552,6 +549,7 @@
             $('.threadwindow').css('display', 'none');
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
+            $('.loadingscreen').html('Fetching Content<br/>Please Wait');
 
             // empty the demo content out of the topic window
             //
@@ -564,10 +562,6 @@
             var postID = this.id;
             var parenttopicname = this.name;
             var parenttopicID = this.parentElement.id;
-
-            console.log(parenttopicname); // ok
-            console.log(parenttopicID); // ok
-
             
 
             // let's find the comments 
@@ -584,37 +578,39 @@
                     $('.loadingscreen').css('display', 'none');
                     $('.threadwindow').css('display', 'block');
 
+
+                    if (response.length == 0)
+                    {
+                        console.log('non');
+                        $('.loadingscreen').css('display', 'block');
+                        $('.loadingscreen').text('No posts here.');
+                    }
+
                     // get main comment first
 
                     var parentowner = response['threadowner'];
                     var parentID = response['id'];
                     var parenttitle = response['threadtitle'];
                     var parentbody = response['threadbody'];
-                    var parenttype = response['threadtype'];
+                    var parenttype = parseInt(response['threadtype']);
                     var parentreputation = response['reputation'];
                     var parentcreated = response['date_created'];
                     var parentmodified = response['date_modified'];
 
-                    console.log(parenttitle);
-                    console.log(parentbody);
-                    console.log(parenttype);
-                    console.log(parentreputation);
-                    console.log(parentcreated);
-                    console.log(parentmodified);
 
                     var postinsert = '';
-                    var linkpost = "<a href='"+parentbody+"'>"+parentbody+"</a>";
-                    var imgpost = "<a href='data:image/png;base64,"+parentbody+"'><img class='postimg' src='data:image/png;base64,"+parentbody+"' alt='"+parenttitle+"' /></a>";
-                    var textpost = "<pre>"+parentbody+"</pre>";
+                    var linkpost = "<a class='outlink' href='"+parentbody+"'>"+parentbody+"</a>";
+                    var imgpost = "<img class='postimg' src='data:image/png;base64,"+parentbody+"' alt='"+parenttitle+"' />";
+                    var textpost = makeValidString(parentbody);
 
                     
 
                     switch (parenttype) 
                     {
-                        case "1":
+                        case 1:
                         postinsert = linkpost;
                         break;
-                        case "2":
+                        case 2:
                         postinsert = imgpost;
                         break;
                         default:
@@ -634,7 +630,7 @@
                     <div class=\"displaypostroot\">\n\
                     <div class=\"posttitle\">'+parenttitle+'</div>\n\
                     By <button class=\"profile_button\">'+parentowner+'</button><br/>\n\
-                    '+postinsert+'\n\
+                    <br/>'+postinsert+'<br/>\n\
                     <br/><sup>'+parentcreated+'</sup><br/>\n\
                     <button class=\"replybutton normalreply\" title=\"Reply\" name=\"'+parentID+'\">Reply</button>\n\
                     <button class=\"replybutton quotereply\" title=\"Reply With Quote\" name=\"'+parentID+'\">Quote</button>\n\
@@ -661,7 +657,6 @@
                     for (var i = 0; i < response['replies'].length; i++)
                     {
 
-                        // console.log(response['replies'][i]);
                     
                         var replyID = response['replies'][i]['id'];
                         var replytitle = response['replies'][i]['title'];

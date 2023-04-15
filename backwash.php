@@ -86,6 +86,19 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   function insert_post($dbc, $ownerID, $title, $body, $tid) 
   {
+      // Prepare the SQL statement with placeholders
+      $sql_check = "SELECT id FROM items WHERE title=? AND body=? LIMIT 1";
+      $sql_insert = "INSERT INTO items (ownerID, title, body, date_created, date_modified, tid) 
+                      VALUES (?, ?, ?, NOW(), NOW(), ?)";
+  
+      // Prepare the statement
+      $stmt_check = mysqli_prepare($dbc, $sql_check);
+      $stmt_insert = mysqli_prepare($dbc, $sql_insert);
+  
+      // Bind parameters to the statement
+      mysqli_stmt_bind_param($stmt_check, 'ss', $title_trimmed, $body_trimmed);
+      mysqli_stmt_bind_param($stmt_insert, 'isss', $ownerID, $title_trimmed, $body_trimmed, $tid);
+  
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
       $title = mysqli_real_escape_string($dbc, $title);
@@ -94,42 +107,41 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
       $title_trimmed = (strlen($title) > 99) ? substr($title, 0, 100) : $title;
       $body_trimmed = (strlen($body) > 999) ? substr($body, 0, 1000) : $body;
   
-      // Construct the SQL query to check if the item already exists
-      $sql_check = "SELECT id FROM items WHERE title='$title_trimmed' AND body='$body_trimmed' LIMIT 1";
-  
-      // Execute the SQL query
-      $result = mysqli_query($dbc, $sql_check);
+      // Execute the statement to check if the item already exists
+      mysqli_stmt_execute($stmt_check);
+      $result = mysqli_stmt_get_result($stmt_check);
       $row = mysqli_fetch_array($result);
   
       if (strlen($title_trimmed) > 0 && strlen($body_trimmed) > 0)
       {
-        if($row) 
-        {
-            // Item already exists, return false
-            return "Post Already Saved";
-        } 
-        else 
-        {
-            // Construct the SQL query to insert the new item
-            $sql_insert = "INSERT INTO items (ownerID, title, body, date_created, date_modified, tid) 
-            VALUES ('$ownerID', '$title_trimmed', '$body_trimmed', NOW(), NOW(), '$tid')";
-    
-            // Execute the SQL query
-            if (mysqli_query($dbc, $sql_insert)) 
-            {
-                return "Post Saved";
-            } 
-            else 
-            {
-                return "An Error Occured [1]";
-            }
-        }
+          if($row) 
+          {
+              // Item already exists, return false
+              return "Post Already Saved";
+          } 
+          else 
+          {
+              // Execute the statement to insert the new item
+              if (mysqli_stmt_execute($stmt_insert)) 
+              {
+                  return "Post Saved";
+              } 
+              else 
+              {
+                  return "An Error Occured [1]";
+              }
+          }
       }
       else
       {
-        return "All fields must be filled";
+          return "All fields must be filled";
       }
+      
+      // Close the statements
+      mysqli_stmt_close($stmt_check);
+      mysqli_stmt_close($stmt_insert);
   }
+  
   
 
   // insert file post
@@ -175,48 +187,51 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
       // print($mime_type);
       // die();
       
-      if ($extension !== "xxx")
-      {
+      if ($extension !== "xxx") {
         // Construct the SQL query to check if the item already exists
-        $sql_check = "SELECT id FROM items WHERE title='$title_trimmed' AND body='$filestring' LIMIT 1";
+        $sql_check = "SELECT id FROM items WHERE title=? AND body=? LIMIT 1";
     
-        // Execute the SQL query
-        $result = mysqli_query($dbc, $sql_check);
-        $row = mysqli_fetch_array($result);
+        // Prepare the statement
+        $stmt = mysqli_prepare($dbc, $sql_check);
     
-        if (strlen($title_trimmed) > 0 && strlen($filestring) > 0)
-        {
-          if($row) 
-          {
-              // Item already exists, return false
-              return "File Already Saved";
-          } 
-          else 
-          {
-              // Construct the SQL query to insert the new item
-              $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, extension, date_created, date_modified, tid) 
-              VALUES ('$ownerID', 2, '$title_trimmed', '$filestring', '$extension', NOW(), NOW(), '$tid')";
-      
-              // Execute the SQL query
-              if (mysqli_query($dbc, $sql_insert)) 
-              {
-                  return "File Saved";
-              } 
-              else 
-              {
-                  return "An Error Occured [1]";
-              }
-          }
+        // Bind the parameters
+        mysqli_stmt_bind_param($stmt, "ss", $title_trimmed, $filestring);
+    
+        // Execute the statement
+        mysqli_stmt_execute($stmt);
+    
+        // Get the result
+        mysqli_stmt_store_result($stmt);
+        $row_count = mysqli_stmt_num_rows($stmt);
+    
+        if (strlen($title_trimmed) > 0 && strlen($filestring) > 0) {
+            if ($row_count > 0) {
+                // Item already exists, return false
+                return "File Already Saved";
+            } else {
+                // Construct the SQL query to insert the new item
+                $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, extension, date_created, date_modified, tid) VALUES (?, 2, ?, ?, ?, NOW(), NOW(), ?)";
+    
+                // Prepare the statement
+                $stmt = mysqli_prepare($dbc, $sql_insert);
+    
+                // Bind the parameters
+                mysqli_stmt_bind_param($stmt, "isssi", $ownerID, $title_trimmed, $filestring, $extension, $tid);
+    
+                // Execute the statement
+                if (mysqli_stmt_execute($stmt)) {
+                    return "File Saved";
+                } else {
+                    return "An Error Occured [1]";
+                }
+            }
+        } else {
+            return "All fields must be filled";
         }
-        else
-        {
-          return "All fields must be filled";
-        }
-      }
-      else
-      {
+    } else {
         return "File type invalid";
-      }
+    }
+    
   }
   
 
@@ -225,55 +240,63 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   function insert_link($dbc, $ownerID, $title, $linkurl, $tid) 
   {
-      // Escape the values to prevent SQL injection
-      $ownerID = mysqli_real_escape_string($dbc, $ownerID);
-      $title = mysqli_real_escape_string($dbc, $title);
-      $linkurl = mysqli_real_escape_string($dbc, $linkurl);
-
       // check and amend URL
       if (!preg_match("~^(?:f|ht)tps?://~i", $linkurl)) {
           $linkurl = "https://" . $linkurl;
       }
-
-
   
       $title_trimmed = (strlen($title) > 100) ? substr($title, 0, 100) : $title;
       $linkurl_trimmed = (strlen($linkurl) > 200) ? substr($linkurl, 0, 200) : $linkurl;
-  
+    
       // Construct the SQL query to check if the item already exists
-      $sql_check = "SELECT id FROM items WHERE title='$title_trimmed' AND body='$linkurl_trimmed' LIMIT 1";
-  
-      // Execute the SQL query
-      $result = mysqli_query($dbc, $sql_check);
+      $sql_check = "SELECT id FROM items WHERE title=? AND body=? LIMIT 1";
+      
+      // Prepare the SQL query
+      $stmt = mysqli_prepare($dbc, $sql_check);
+      
+      // Bind parameters to the prepared statement
+      mysqli_stmt_bind_param($stmt, "ss", $title_trimmed, $linkurl_trimmed);
+      
+      // Execute the prepared statement
+      mysqli_stmt_execute($stmt);
+      
+      // Get the result set from the prepared statement
+      $result = mysqli_stmt_get_result($stmt);
       $row = mysqli_fetch_array($result);
-  
+      
       if (strlen($title_trimmed) > 0 && strlen($linkurl_trimmed) > 0)
       {
-        if($row) 
-        {
-            // Item already exists, return false
-            return "Link Already Saved";
-        } 
-        else 
-        {
-            // Construct the SQL query to insert the new item
-            $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, date_created, date_modified, tid) 
-            VALUES ('$ownerID', 1, '$title_trimmed', '$linkurl_trimmed', NOW(), NOW(), '$tid')";
-    
-            // Execute the SQL query
-            if (mysqli_query($dbc, $sql_insert)) 
-            {
-                return "Link Saved";
-            } 
-            else 
-            {
-                return "An Error Occured [1]";
-            }
-        }
+          if($row) 
+          {
+              // Item already exists, return false
+              return "Link Already Saved";
+          } 
+          else 
+          {
+              // Construct the SQL query to insert the new item
+              $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, date_created, date_modified, tid) 
+                             VALUES (?, 1, ?, ?, NOW(), NOW(), ?)";
+      
+              // Prepare the SQL query
+              $stmt = mysqli_prepare($dbc, $sql_insert);
+      
+              // Bind parameters to the prepared statement
+              mysqli_stmt_bind_param($stmt, "sssi", $ownerID, $title_trimmed, $linkurl_trimmed, $tid);
+      
+              // Execute the prepared statement
+              if (mysqli_stmt_execute($stmt)) 
+              {
+                  return "Link Saved";
+              } 
+              else 
+              {
+                  return "An Error Occured [1]";
+              }
+          }
       }
       else
       {
-        return "All fields must be filled";
+          return "All fields must be filled";
       }
   }
   

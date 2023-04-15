@@ -20,6 +20,18 @@ a:hover {
     color: #00ff00;
 }
 
+a.outlink {
+    color: #000000;
+    font-weight: bold;
+    padding: 4px;
+    font-size: 1.2vw;
+    text-decoration: none;
+}
+a.outlink:hover {
+    color: #ff0000;
+    text-decoration: underline overline;
+}
+
 
 .pageheader {
     width: 80vw;
@@ -447,8 +459,10 @@ select.postlimit:hover {
 }
 
 .postlinkpreview {
-    font-size: 1.2vw;
+    font-size: 1vw;
+    font-style: italic;
     padding: 0.2vw;
+    margin-top: 6px;
     width: 30vw;
 }
 .postimgpreview {

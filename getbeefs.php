@@ -47,17 +47,22 @@ if ($get_type === 'topic')
 
     $stmt->execute();
 
-    $data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $result = $stmt->get_result();
+
+    $data = array();
 
     // Convert date strings to timestamps and formats
-    foreach ($data as &$row) {
+    while ($row = $result->fetch_assoc()) {
         $timestamp = strtotime($row['newest_date']);
         $date_format = date("F jS, Y", $timestamp);
         $row['lastpost'] = $date_format;
+        $row['title'] = htmlspecialchars(make_valid_string($row['title']));
+        $data[] = $row;
     }
 
     $stmt->close();
 }
+
 
 
 // get list of posts in given topic
@@ -70,15 +75,21 @@ if ($get_type === 'post')
     $topic_id = (isset($_GET['topic_id'])) ? (int)$_GET['topic_id'] : 1;
     
     // try to get topic name and pass it in a var
-    $topicquery = "SELECT * FROM topics WHERE id=$topic_id LIMIT 1";
-    $topicresult = mysqli_query($database_connection, $topicquery);
+    $topicquery = "SELECT * FROM topics WHERE id=? LIMIT 1";
+    $topicstmt = mysqli_prepare($database_connection, $topicquery);
+    mysqli_stmt_bind_param($topicstmt, "i", $topic_id);
+    mysqli_stmt_execute($topicstmt);
+    $topicresult = mysqli_stmt_get_result($topicstmt);
     $topicrow = mysqli_fetch_assoc($topicresult);
 
-    $topictitle = $topicrow['title'];
+    $topictitle = htmlspecialchars($topicrow['title'], ENT_QUOTES);
     
     // still need to finish query to add limit, start, sort...
-    $query = "SELECT * FROM items WHERE tid=$topic_id AND lineage='post' ORDER BY reputation DESC";
-    $result = mysqli_query($database_connection, $query);
+    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' ORDER BY reputation, date_created DESC";
+    $stmt = mysqli_prepare($database_connection, $query);
+    mysqli_stmt_bind_param($stmt, "i", $topic_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     $topiccounter = 0;
     while ($row = mysqli_fetch_assoc($result)) 
@@ -88,9 +99,11 @@ if ($get_type === 'post')
         $post_id = (isset($row['id'])) ? (int)$row['id'] : (int)0;
         // Prepare the SQL statement
         // SQL query
-        $sql = "SELECT COUNT(*) FROM items WHERE pid = $post_id AND lineage = 'reply'";
+        $sql = "SELECT COUNT(*) FROM items WHERE pid = ? AND lineage = 'reply'";
 
         $stmt = $database_connection->prepare($sql);
+
+        $stmt->bind_param('i', $post_id);
 
         $stmt->execute();
 
@@ -103,6 +116,8 @@ if ($get_type === 'post')
         $row['replies'] = $count;
 
         $row['topic'] = $topictitle;
+
+        $row['body'] = htmlspecialchars($row['body'], ENT_QUOTES);
 
         $data[] = $row;
     }
@@ -118,52 +133,54 @@ if ($get_type === 'thread')
     // if none specified, kick user back to topics list
     $post_id = (isset($_GET['post_id'])) ? (int)$_GET['post_id'] : 0;
     
-    
     if ($post_id === 0)
     {
-
         $data['error'] = 'no post ID';
-        
     }
+    else
+    {
+        $threadquery = "SELECT * FROM items WHERE id=? AND lineage='post' ORDER BY date_created DESC LIMIT 1";
+        $stmt = mysqli_prepare($database_connection, $threadquery);
+        mysqli_stmt_bind_param($stmt, 'i', $post_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $threadrow = mysqli_fetch_assoc($result);
 
-    // get main first
-    
-    // try to get topic name and pass it in a var
-    $threadquery = "SELECT * FROM items WHERE id=$post_id AND lineage='post' ORDER BY date_created DESC LIMIT 1";
-    $threadresult = mysqli_query($database_connection, $threadquery);
-    $threadrow = mysqli_fetch_assoc($threadresult);
+        // we need to get the Owner name when accounts are done
+        $data ['threadowner'] = 'Username'; // $threadrow['ownerID'];
 
-    // we need to get the Owner name when accounts are done
+        $data['id'] = $threadrow['id'];
+        $data['threadtitle'] = htmlspecialchars($threadrow['title'], ENT_QUOTES, 'UTF-8');
+        $data['threadbody'] = htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8');
+        $data['threadtype'] = $threadrow['item_type'];
+        $data['extension'] = $threadrow['extension'];
+        $data['reputation'] = $threadrow['reputation'];
+        $data['date_created'] = $threadrow['date_created'];
+        $data['date_modified'] = $threadrow['date_modified'];
 
-    $data ['threadowner'] = 'Username'; // $threadrow['ownerID'];
+        $replydata = [];
 
-    $data['id'] = $threadrow['id'];
-    $data['threadtitle'] = $threadrow['title'];
-    $data['threadbody'] = $threadrow['body'];
-    $data['threadtype'] = $threadrow['item_type'];
-    $data['extension'] = $threadrow['extension'];
-    $data['reputation'] = $threadrow['reputation'];
-    $data['date_created'] = $threadrow['date_created'];
-    $data['date_modified'] = $threadrow['date_modified'];
+        $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' ORDER BY reputation DESC";
+        $stmt = mysqli_prepare($database_connection, $repliesquery);
+        mysqli_stmt_bind_param($stmt, 'i', $post_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
-    $replydata = [];
-    
-    // still need to finish query to add limit, start, sort...
-    $repliesquery = "SELECT * FROM items WHERE pid=$post_id AND lineage='reply' ORDER BY reputation DESC";
-    $repliesresult = mysqli_query($database_connection, $repliesquery);
-    
-        while ($row = mysqli_fetch_assoc($repliesresult)) 
+        while ($row = mysqli_fetch_assoc($result)) 
         {
-
             $row['ownerID'] = ($row['ownerID'] == 0) ? $row['ownerID'] : 'User';
+            $row['title'] = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
+            $row['body'] = htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8');
             $replydata[] = $row;
         }
 
-        
-
         $data['replies'] = $replydata;
     }
+}
 
+
+
+    
 
 
 // return data 
