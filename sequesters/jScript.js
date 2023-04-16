@@ -960,13 +960,17 @@
     });
 
 
-    $(document).on("input", ".passwordreg", function() {
+    $(document).on("input", ".passwordreg", function() 
+    {
         var passwordslug = $(this).val();
         
         var regex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;'"\\|,<.>\/?`~-])[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;'"\\|,<.>\/?`~-£]{8,}$/;
-        if (regex.test(passwordslug)) {
+        if (regex.test(passwordslug)) 
+        {
             $('.passregstatus').text("Password is valid").css("color", "#00ff00");
-        } else {
+        } 
+        else 
+        {
             $('.passregstatus').text("Password not valid").css("color", "#ff0000");
         }
     });
@@ -1128,7 +1132,7 @@
 
             // Add things
             modal.append('<div style="text-align: center; margin: 0 auto; width: 80%;"><div style="text-align: left;"><br/>\n\
-            <label style="text-align: left; margin: 0 auto;">Create Account</label><br/><br/>\n\
+            <label style="text-align: left; margin: 0 auto; font-size: 1.3vw;">Create Account</label><br/><br/>\n\
             <label for="username_reg">Username</label><br/>\n\
             <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 6 characters.<br/>- Letters, numbers &amp; underscore only.</div>\n\
             <input id="username_reg" type="text" placeholder="Username" maxlength="255" class="registerinput usernamereg"/><br/>\n\

@@ -22,6 +22,7 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
 
         // dunno yet, thinking maybe some sort of error message and a vague 'important' looking string
         // to needle the l337 h@X0rs for a bit while they follow the thread to nowhere :P
+        echo "ELZ1769"; // lol
         
     } 
 
@@ -39,8 +40,9 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
         $userrow = mysqli_fetch_assoc($userresult);
 
         $stored_password = $userrow['password'];
+        $stored_salt = $userrow['salt'];
 
-        if (password_verify($pass_word, $stored_password)) 
+        if (password_verify($stored_salt . $pass_word, $stored_password)) 
         {
             
             // last login is now
@@ -140,38 +142,68 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
 
 
 
-    // username check
-    if ($operation === "namecheck")
-    {
-        
-        $userquery = "SELECT * FROM users WHERE username = ? ORDER BY id LIMIT 1";
-        $userstmt = mysqli_prepare($database_connection, $userquery);
-        mysqli_stmt_bind_param($userstmt, "s", $user_name);
-        mysqli_stmt_execute($userstmt);
-        $userresult = mysqli_stmt_get_result($userstmt);
-        $userrow = mysqli_fetch_assoc($userresult);
-
-        $stored_sesh = $userrow['username'];
-
-        if (strlen($stored_sesh) > 0)
-        {
-            echo 'taken';
-        }
-        else
-        {
-            echo "free";
-        }
-    
-    }
-
     // post basic text post
     if ($operation === "createuser")
     {
+        // check username is valid
+        if (!preg_match('/^[a-zA-Z0-9_]{6,}$/', $user_name)) 
+        {
+            echo "false";
+            exit;
+        }
 
-        echo "meow";
-        
-    } 
+        // check password is complex enough
+        if (strlen($pass_word) < 8 || !preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;\'"\\\\|,<.>\/?`~\-])[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;\'"\\\\|,<.>\/?`~\-£]{8,}$/', $pass_word))
+        {
+            echo "false";
+            exit;
+        }
+
+        // check password confirmation matches
+        if ($pass_word != $pass_word_again)
+        {
+            echo "false";
+            exit;
+        }
+
+        // check email address is valid
+        if (!filter_var($email_address, FILTER_VALIDATE_EMAIL))
+        {
+            echo "false";
+            exit;
+        }
+
+        // hash the password
+        $salt = bin2hex(random_bytes(16));
+        $hashed_password = password_hash($salt . $pass_word, PASSWORD_BCRYPT);
+
+        // insert the new user
+        $sql_insert = "INSERT INTO users (username, password, salt, email) 
+                    VALUES (?, ?, ?, ?)";
     
+        // Prepare the SQL query
+        $stmt = mysqli_prepare($database_connection, $sql_insert);
+    
+        // Bind parameters to the prepared statement
+        mysqli_stmt_bind_param($stmt, "ssss", $user_name, $hashed_password, $salt, $email_address);
+    
+        // Execute the prepared statement
+        if (mysqli_stmt_execute($stmt)) 
+        {
+            echo "true";
+        } 
+        else 
+        {
+            if (mysqli_errno($database_connection) == 1062)
+            {
+                echo "false"; // username already exists
+            }
+            else
+            {
+                echo "false"; // other database error
+            }
+        }
+    }
 
 
 
