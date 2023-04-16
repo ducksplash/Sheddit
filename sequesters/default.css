@@ -269,7 +269,7 @@ label {
 }
 .signinput {
     width: 12vw;
-    font-size: 1.2vw;
+    font-size: 1.3vw;
     color: #404040;
     background-color: #ffffff;
     border: 0.1px solid #404040;
@@ -288,11 +288,8 @@ label {
     background-color: #404040;
 }
 .signinput:hover {
-    width: 12vw;
-    font-size: 1.2vw;
     color: #ffffff;
     background-color: #404040;
-    border: 0.1px solid #404040;
 }
 select.postinput {
     width: 12.45vw;
@@ -346,6 +343,48 @@ select.postlimit:hover {
 
 .account {
     font-size: 1.2vw;
+}
+
+.loginbutton {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 0.2vw;
+    width: 5vw;
+}
+.loginbutton:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.loginbutton:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
+}
+
+.logoutbutton {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 0.2vw;
+    width: 5vw;
+}
+.logoutbutton:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.logoutbutton:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
 }
 
 
@@ -476,7 +515,39 @@ select.postlimit:hover {
     z-index: 9999;
 }
 
+.registermodal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    width: 20vw;
+    padding: 0.8vw;
+    background-color: white;
+    border: 0.1px solid black;
+    opacity: 100%;
+    z-index: 9999;
+}
 
+.status {
+    padding-top: 0.8vh;
+    margin-top: 2px;
+    font-size: 0.8vw;
+    font-weight: bold;
+}
+
+.registerinput {
+    width: 15vw;
+    font-size: 1.3vw;
+    color: #404040;
+    background-color: #ffffff;
+    border: 0.1px solid #404040;
+}
+
+.registerinput:hover {
+    color: #ffffff;
+    background-color: #404040;
+}
 .modalbutton {
     background-color: #FFFFFF;
     color: #404040;
@@ -492,6 +563,25 @@ select.postlimit:hover {
     color: #ffffff;
 }
 .modalbutton:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+}
+
+.regmodalbutton {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 0.4vw;
+    margin: 4px;
+}
+.regmodalbutton:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.regmodalbutton:disabled {
     background-color: #c0c0c0;
     color: #efefef;
 }
@@ -629,12 +719,12 @@ select.postlimit:hover {
 
 .arrow {
   border: solid black;
-  border-width: 0 3px 3px 0;
+  border-width: 0 5px 5px 0;
   background-color: #ffffff;
   display: inline-block;
-  padding: 0px;
-  height: 14px;
-  width: 14px;
+  padding: 10px;
+  height: 6px;
+  width: 6px;
 }
 
 .right {
@@ -662,7 +752,7 @@ select.postlimit:hover {
   border: solid #00ff00;
   transform: rotate(-135deg);
   -webkit-transform: rotate(-135deg);
-  border-width: 0 3px 3px 0;
+  border-width: 0 5px 5px 0;
 }
 
 .down:hover {
@@ -670,7 +760,7 @@ select.postlimit:hover {
   border: solid #ff0000;
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
-  border-width: 0 3px 3px 0;
+  border-width: 0 5px 5px 0;
 }
 
 .repreading 

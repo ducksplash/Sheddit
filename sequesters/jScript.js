@@ -24,6 +24,31 @@
                     $("#sitetitle").text(response);        
                 }
             });
+
+            // check for logged in users
+
+            
+            $.ajax({
+                type: "POST",
+                url: "./memberlings.php",
+                data: {
+                    operation: "guicheck",
+                },
+                success: function(response) 
+                {
+
+                    if (response != "false")
+                    {
+
+                        // switch out panel
+                        $("#account").empty();
+                        $("#account").append('<div style="text-align: center;">Logged in as<br/>'+response+'<br/><br/>\n\
+                        <button id="logout_button" class="logoutbutton dologout">Log Out</button>\n\
+                        </div>');
+                    }
+                }
+            });
+
             initialised = true;
         }
         
@@ -897,5 +922,240 @@
                 window.open(imgSrc, '_blank');
             });
             
+           
             
+
+    // check username
+    $(document).on("input", ".usernamereg", function() 
+    {
+        var usernameslug = $(this).val();
+
+        // check if username contains invalid characters
+        if (!/^[a-zA-Z0-9_]{6,}$/.test(usernameslug)) {
+            $('.userregstatus').text("Username invalid").css("color", "red");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "./memberlings.php",
+            data: {
+                operation: 'namecheck',
+                user_name: usernameslug,
+            },
+            success: function(response)
+            {
+
+                if (response == 'taken')
+                {
+                    $('.userregstatus').text("Username is taken").css("color", "red");
+                }
+                else
+                {
+                    $('.userregstatus').text("Username is available").css("color", "#00ff00");
+                }
+            
+            }});
+
+    });
+
+
+    $(document).on("input", ".passwordreg", function() {
+        var passwordslug = $(this).val();
+        
+        var regex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;'"\\|,<.>\/?`~-])[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;'"\\|,<.>\/?`~-£]{8,}$/;
+        if (regex.test(passwordslug)) {
+            $('.passregstatus').text("Password is valid").css("color", "#00ff00");
+        } else {
+            $('.passregstatus').text("Password not valid").css("color", "#ff0000");
+        }
+    });
+        
+        
+
+
+    $(document).on("input", ".passwordregrepeat", function() 
+    {
+        var passwordslugrepeat = $(this).val();
+        var passwordslug = $(".passwordreg").val();
+        
+        if (passwordslugrepeat == passwordslug) 
+        {
+            $('.passregrepeatstatus').text("Passwords match").css("color", "#00ff00");
+        } 
+        else 
+        {
+            $('.passregrepeatstatus').text("Passwords do not match").css("color", "#ff0000");
+        }
+    });
+        
+    $(document).on("input", ".emailreg", function() {
+        var emailslug = $(this).val();
+        
+        // Regular expression for email validation
+        var emailRegex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,})+$/;
+    
+        if (emailRegex.test(emailslug)) {
+            $('.emailregstatus').text("Email address is valid").css("color", "#00ff00");
+        } else {
+            $('.emailregstatus').text("Email address not valid").css("color", "#ff0000");
+        }
+    });
+    
+
               
+
+        $(document).on("click", ".dologin", function() 
+        {
+            var specified_username = $(".usernameinput").val();
+            var specified_password = $(".passwordinput").val();
+
+            console.log(specified_username);
+            console.log(specified_password);
+
+            // try login
+            $.ajax({
+                type: "POST",
+                url: "./memberlings.php",
+                data: {
+                    user_name: specified_username,
+                    pass_word: specified_password,
+                    operation: 'loginuser'
+                },
+                success: function(response) 
+                {
+                    console.log(response);  
+                    if (response == 'true')
+                    {
+                        $("#loginstatus").text('Login successful');
+
+                        // switch out panel
+                        $("#account").empty();
+                        $("#account").append('<div style="text-align: center;">Logged in as<br/>'+specified_username+'<br/><br/>\n\
+                        <button id="logout_button" class="logoutbutton dologout">Log Out</button>\n\
+                        </div>');
+
+                    }      
+                    else
+                    {
+                        $("#loginstatus").text('Invalid login');
+                    }
+                }
+            });
+        });   
+
+        $(document).on("click", ".dologout", function() 
+        {
+            // try login
+            $.ajax({
+                type: "POST",
+                url: "./memberlings.php",
+                data: {
+                    operation: 'logoutuser'
+                },
+                success: function() 
+                {
+                    $("#account").empty();
+                    $("#account").append('<div style="font-size: 1.2vw; color: #404040; text-align: center;">Sign In<br/>Or Register<br/><br/>\n\
+                    <div style="text-align: left; padding-left: 1.4vw; margin-bottom: 0.6vh;"><label for="username_input">Username</label></div>\n\
+                    <input id="username_input" type="text" placeholder="Username" maxlength="255" class="signinput usernameinput"/><br/>\n\
+                    <br/>\n\
+                    <div style="text-align: left; padding-left: 1.4vw; margin-bottom: 0.6vh;"><label for="password_input">Password</label></div>\n\
+                    <input id="password_input" type="password" placeholder="Password" maxlength="255" class="signinput passwordinput"/><br/>\n\
+                        <br/>\n\
+                        <button id="login_button" class="loginbutton dologin">Sign In</button>&nbsp;&nbsp;&nbsp;\n\
+                        <button id="register_button" class="loginbutton doregister">Register</button>\n\
+                    </div><br/>\n\
+                    <span id="loginstatus"></span>');
+            
+
+                }
+            });
+        });
+
+
+
+        
+        $(document).on("click", ".doregister", function() 
+        {
+            // Create a modal
+            var modal = $("<div>").addClass("registermodal");
+            
+            // Create a cancel button
+            var cancelButton = $("<button>").text("Cancel").addClass("regmodalbutton").on("click", function() {
+                // Close the modal when the OK button is clicked
+                modal.remove();
+                $(".overlay").remove();
+            });
+
+            
+            // Create a submit button
+            var submitButton = $("<button>").text("Register").addClass("regmodalbutton").on("click", function() 
+            {
+                // Close the modal when the OK button is clicked
+
+                // get the inputs from the modal
+                var username_string = $('.usernamereg').val();
+                var password_string = $('.passwordreg').val();
+                var password_again_string = $('.passwordregrepeat').val();
+                var email_address_string = $('.emailreg').val();
+
+
+                // sign up
+                $.ajax({
+                    type: "POST",
+                    url: "./memberlings.php",
+                    data: {
+                        operation: 'createuser',
+                        user_name: username_string,
+                        pass_word: password_string,
+                        pass_word_again: password_again_string,
+                        email_address: email_address_string
+                    },
+                    success: function(response)
+                    {
+    
+                        console.log(response);
+                    
+                    }});
+
+
+//                modal.remove();
+ //               $(".overlay").remove();
+            });
+            
+
+
+            // Add things
+            modal.append('<div style="text-align: center; margin: 0 auto; width: 80%;"><div style="text-align: left;"><br/>\n\
+            <label style="text-align: left; margin: 0 auto;">Create Account</label><br/><br/>\n\
+            <label for="username_reg">Username</label><br/>\n\
+            <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 6 characters.<br/>- Letters, numbers &amp; underscore only.</div>\n\
+            <input id="username_reg" type="text" placeholder="Username" maxlength="255" class="registerinput usernamereg"/><br/>\n\
+            <span class="status userregstatus"></span><br/>\n\
+            <label for="password_reg">Password</label><br/>\n\
+            <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 8 characters.<br/>- At least upper case letter.<br/>- At least 1 number.<br/>- At least 1 special character.</div>\n\
+            <input id="password_reg" type="password" placeholder="Password" maxlength="255" class="registerinput passwordreg"/><br/>\n\
+            <span class="status passregstatus"></span><br/>\n\
+            <label for="password_reg_repeat">Repeat Password</label><br/>\n\
+            <input id="password_reg_repeat" type="password" placeholder="Password" maxlength="255" class="registerinput passwordregrepeat"/><br/>\n\
+            <span class="status passregrepeatstatus"></span><br/>\n\
+            <label for="email_reg">Email Address</label><br/>\n\
+            <input id="email_reg" type="text" placeholder="username@example.com" maxlength="255" class="registerinput emailreg"/>\n\
+            <span class="status emailregstatus"></span><br/></div>');
+            
+            modal.append("<br/>");
+            
+            
+            modal.append(cancelButton);
+            modal.append(submitButton);
+            
+            
+
+            // Add an overlay to the website
+            var overlay = $("<div>").addClass("overlay").addClass("modaloverlay");
+            
+            // Add the modal and overlay to the website
+            $("body").append(overlay).append(modal);
+            });
+          
