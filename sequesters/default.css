@@ -1,8 +1,10 @@
-body {
+body 
+{
     background-color: white;
     color: #606060;
     font-family: "DejaVu Sans", sans-serif;
     font-size: 1.1vw;
+    filter: saturate(100%);
 }
 a {
     color: #ffffff;
@@ -65,7 +67,7 @@ a.outlink:hover {
 .topicpath {
     color: #ffffff;
     font-weight: bold;
-    font-size: 1vw;
+    font-size: 1.2vw;
 }
 .buttonsrow {
     width: 40vw;
@@ -351,7 +353,8 @@ select.postlimit:hover {
 .postwindow {
     height: 70vh;
     width: 40vw;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 1vw;
     display: none;
 }
@@ -361,7 +364,8 @@ select.postlimit:hover {
 .threadwindow {
     height: 70vh;
     width: 40vw;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 1vw;
     display: none;
 }
@@ -387,7 +391,8 @@ select.postlimit:hover {
 .topicwindow {
     height: 70vh;
     width: 40vw;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 1vw;
     display: block;
 }
@@ -539,7 +544,7 @@ select.postlimit:hover {
 
 
 .postimg {
-    width: 10vw;
+    width: 30vw;
 }
 .previewimg {
     width: 8vw;

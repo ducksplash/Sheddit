@@ -1,3 +1,4 @@
+        
         var title_maxchars = 100;
         var body_maxchars = 1000;
         var reply_maxchars = 1000;
@@ -7,10 +8,23 @@
         var title_ready = false;
         var post_ready = false;
         var initialised = false;
+        
+
 
         if (!initialised)
         {
             load_topics();
+        
+            $.ajax({
+                type: "GET",
+                url: "./innitdoe.php",
+                success: function(response) 
+                {
+                    $(".sitetitle").text(response);
+                    $("#sitetitle").text(response);        
+                }
+            });
+            initialised = true;
         }
         
         $(document).ready(function()
@@ -656,6 +670,7 @@
                     var textpost = makeValidString(parentbody);
 
                     
+                    
 
                     switch (parenttype) 
                     {
@@ -861,3 +876,26 @@
                 });
             });
 
+            $(document).on("click", ".postimg", function(e) {
+                // Prevent default click behavior
+                e.preventDefault();
+            
+                // Get the source URL of the clicked image
+                var imgSrc = $(this).attr('src');
+            
+                // Create a new MouseEvent object
+                var event = new MouseEvent('contextmenu', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+            
+                // Dispatch the event on the image element
+                $(this)[0].dispatchEvent(event);
+            
+                // Open the image in a new tab
+                window.open(imgSrc, '_blank');
+            });
+            
+            
+              
