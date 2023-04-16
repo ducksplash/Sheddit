@@ -7,6 +7,54 @@ require_once('./database_connection.php');
 ////////////////////////////////////////////////////////
 
 
+// check if user logged in
+
+$loggedin = false;
+$cookie_username = '';
+
+if (isset($_COOKIE["sesh"])) 
+{
+
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+    $userquery = "SELECT * FROM users WHERE sesh = ? ORDER BY id LIMIT 1";
+    $userstmt = mysqli_prepare($database_connection, $userquery);
+    mysqli_stmt_bind_param($userstmt, "s", $_COOKIE['sesh']);
+    mysqli_stmt_execute($userstmt);
+    $userresult = mysqli_stmt_get_result($userstmt);
+    $userrow = mysqli_fetch_assoc($userresult);
+
+    $stored_sesh = $userrow['sesh'];
+    $stored_user_agent = $userrow['user_agent'];
+
+    $userstmt->close();
+
+
+    if (strlen($stored_sesh) > 0)
+    {
+        // this makes stealing cookies more awkward, but still not impossible
+        if ($user_agent === $stored_user_agent)
+        {    
+            $cookie_username = $userrow['username'];
+            $loggedin = true;
+        }
+        else
+        {
+            $loggedin = false;
+        }
+    }
+    else
+    {
+        $loggedin = false;
+    }
+} 
+else 
+{
+    $loggedin = false;
+}
+
+
+
 $post_type = (isset($_POST['post_type'])) ? (int)$_POST['post_type'] : 0;
 $title_string = (isset($_POST['post_title'])) ? make_valid_string($_POST['post_title']) : '';
 $topic_id = (isset($_POST['post_topic'])) ? $_POST['post_topic'] : 0;
@@ -22,34 +70,38 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     // Define the owner ID when accounts exist, use placeholders for now
     $ownerID = 1;
 
-
-
-    // post basic text post
-    if ($post_type === 0 || $post_type == "")
+    if ($loggedin)
     {
 
-      $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
-      
-    } 
+        // post basic text post
+        if ($post_type === 0 || $post_type == "")
+        {
 
-    // post a link
-    if ($post_type === 1)
+        $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
+        
+        } 
+
+        // post a link
+        if ($post_type === 1)
+        {
+
+        $post_result = insert_link($database_connection, $ownerID, $title_string, $link_string, $topic_id);
+        
+        } 
+
+        // post a file
+        if ($post_type === 2)
+        {
+
+        $post_result = insert_file($database_connection, $ownerID, $title_string, $file_string, $topic_id);
+        
+        } 
+
+    }
+    else
     {
-
-      $post_result = insert_link($database_connection, $ownerID, $title_string, $link_string, $topic_id);
-      
-    } 
-
-    // post a file
-    if ($post_type === 2)
-    {
-
-      $post_result = insert_file($database_connection, $ownerID, $title_string, $file_string, $topic_id);
-      
-    } 
-
-
-
+        $post_result = 'Not logged in';
+    }
 
 
   // output  

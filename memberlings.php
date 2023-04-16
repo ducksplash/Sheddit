@@ -41,6 +41,9 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
 
         $stored_password = $userrow['password'];
         $stored_salt = $userrow['salt'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+        
 
         if (password_verify($stored_salt . $pass_word, $stored_password)) 
         {
@@ -57,8 +60,8 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
             $session_id = password_hash($stored_password.$randy_salt, PASSWORD_BCRYPT);
             
 
-            $stmt_sesh_set = $database_connection->prepare("UPDATE users SET sesh = ?, lastlogin = ? WHERE username = ?");
-            $stmt_sesh_set->bind_param("sss", $session_id, $logindate, $user_name);
+            $stmt_sesh_set = $database_connection->prepare("UPDATE users SET sesh = ?, user_agent = ?, lastlogin = ? WHERE username = ?");
+            $stmt_sesh_set->bind_param("ssss", $session_id, $user_agent, $logindate, $user_name);
             $stmt_sesh_set->execute();
 
             
@@ -113,7 +116,7 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
     {
         if (isset($_COOKIE["sesh"])) 
         {
-
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
             $userquery = "SELECT * FROM users WHERE sesh = ? ORDER BY id LIMIT 1";
             $userstmt = mysqli_prepare($database_connection, $userquery);
@@ -123,11 +126,21 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
             $userrow = mysqli_fetch_assoc($userresult);
     
             $stored_sesh = $userrow['sesh'];
+            $stored_user_agent = $userrow['user_agent'];
+
+            $userstmt->close();
+
 
             if (strlen($stored_sesh) > 0)
             {
-                
-                echo $userrow['username'];
+                if ($stored_user_agent === $user_agent)
+                {                
+                    echo $userrow['username'];
+                }
+                else
+                {
+                    echo "false";
+                }
             }
             else
             {
@@ -173,23 +186,40 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
             exit;
         }
 
+        // check if username already exists
+        $xsql_select = "SELECT COUNT(*) FROM users WHERE username = ?";
+        $xstmt = mysqli_prepare($database_connection, $xsql_select);
+        mysqli_stmt_bind_param($xstmt, "s", $user_name);
+        mysqli_stmt_execute($xstmt);
+        mysqli_stmt_bind_result($xstmt, $xcount);
+        mysqli_stmt_fetch($xstmt);
+
+        if ($xcount > 0) 
+        {
+            echo "false"; // username already exists
+            exit;
+        }
+        $xstmt->close();
+
         // hash the password
         $salt = bin2hex(random_bytes(16));
         $hashed_password = password_hash($salt . $pass_word, PASSWORD_BCRYPT);
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
         // insert the new user
-        $sql_insert = "INSERT INTO users (username, password, salt, email) 
+        $sql_insert = "INSERT INTO users (username, password, salt, email, user_agent) 
                     VALUES (?, ?, ?, ?)";
     
         // Prepare the SQL query
         $stmt = mysqli_prepare($database_connection, $sql_insert);
     
         // Bind parameters to the prepared statement
-        mysqli_stmt_bind_param($stmt, "ssss", $user_name, $hashed_password, $salt, $email_address);
+        mysqli_stmt_bind_param($stmt, "sssss", $user_name, $hashed_password, $salt, $email_address, $user_agent);
     
         // Execute the prepared statement
         if (mysqli_stmt_execute($stmt)) 
         {
+            // account created
             echo "true";
         } 
         else 
@@ -203,6 +233,8 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
                 echo "false"; // other database error
             }
         }
+        $stmt->close();
+
     }
 
 

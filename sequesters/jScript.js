@@ -8,6 +8,11 @@
         var title_ready = false;
         var post_ready = false;
         var initialised = false;
+
+        var username_ready = false;
+        var password_ready = false;
+        var password_again_ready = false;
+        var email_ready = false;
         
 
 
@@ -949,10 +954,16 @@
                 if (response == 'taken')
                 {
                     $('.userregstatus').text("Username is taken").css("color", "red");
+                    username_ready = false;
+                    check_sign_up();
+        
                 }
                 else
                 {
                     $('.userregstatus').text("Username is available").css("color", "#00ff00");
+                    username_ready = true;
+                    check_sign_up();
+        
                 }
             
             }});
@@ -968,10 +979,15 @@
         if (regex.test(passwordslug)) 
         {
             $('.passregstatus').text("Password is valid").css("color", "#00ff00");
+            password_ready = true;
+            check_sign_up();
+        
         } 
         else 
         {
             $('.passregstatus').text("Password not valid").css("color", "#ff0000");
+            password_ready = false;
+            check_sign_up();
         }
     });
         
@@ -986,10 +1002,16 @@
         if (passwordslugrepeat == passwordslug) 
         {
             $('.passregrepeatstatus').text("Passwords match").css("color", "#00ff00");
+            password_again_ready = true;
+            check_sign_up();
+        
         } 
         else 
         {
             $('.passregrepeatstatus').text("Passwords do not match").css("color", "#ff0000");
+            password_again_ready = false;
+            check_sign_up();
+        
         }
     });
         
@@ -1001,22 +1023,142 @@
     
         if (emailRegex.test(emailslug)) {
             $('.emailregstatus').text("Email address is valid").css("color", "#00ff00");
+            email_ready = true;
+            check_sign_up();
+            
+
         } else {
             $('.emailregstatus').text("Email address not valid").css("color", "#ff0000");
+            email_ready = false;
+            check_sign_up();
+        
         }
     });
     
 
-              
+    
 
+    function check_sign_up()
+    {
+        if (username_ready && password_ready && password_again_ready && email_ready)
+        {
+            $(".sgnup").prop("disabled", false);
+        }
+        else
+        {
+            $(".sgnup").prop("disabled", true);
+        }
+
+
+    }          
+
+
+        
+        $(document).on("click", ".doregister", function() 
+        {
+            // Create a modal
+            var modal = $("<div>").addClass("registermodal");
+            
+            // Create a cancel button
+            var cancelButton = $("<button>").text("Cancel").addClass("regmodalbutton").addClass("signupcancel").on("click", function() {
+                // Close the modal when the OK button is clicked
+                modal.remove();
+                $(".overlay").remove();
+            });
+
+            
+            // Create a submit button
+            var submitButton = $("<button>").text("Register").addClass("regmodalbutton").addClass("sgnup").attr("disabled","true").on("click", function() 
+            {
+                // Close the modal when the OK button is clicked
+
+                // get the inputs from the modal
+                var username_string = $('.usernamereg').val();
+                var password_string = $('.passwordreg').val();
+                var password_again_string = $('.passwordregrepeat').val();
+                var email_address_string = $('.emailreg').val();
+
+
+                // sign up
+                $.ajax({
+                    type: "POST",
+                    url: "./memberlings.php",
+                    data: {
+                        operation: 'createuser',
+                        user_name: username_string,
+                        pass_word: password_string,
+                        pass_word_again: password_again_string,
+                        email_address: email_address_string
+                    },
+                    success: function(response)
+                    {
+    
+                        
+                        if (response == 'false')
+                        {
+
+                            console.log('fail');                            
+                            $('.signupstatus').text("Error: Account could not be created as username may already exist.").css("color", "#ff0000");
+
+                        }
+                        else
+                        {
+                            
+                            console.log('go');                                       
+                            $('.signupstatus').text("Account created, you may now log in.").css("color", "#00ff00");
+
+                            $('.userregstatus').text("");
+                            $('.passregstatus').text(""); 
+                            $('.passregrepeatstatus').text(""); 
+                            $('.emailregstatus').text("");
+                            $('.usernamereg').val("");
+                            $('.passwordreg').val("");
+                            $('.passwordregrepeat').val("");
+                            $('.emailreg').val("");
+                            check_sign_up();
+
+                        }
+                    
+                    }});
+
+            });
+            
+            // Add things
+            modal.append('<div style="text-align: center; margin: 0 auto; width: 80%;"><div style="text-align: left;"><br/>\n\
+            <label style="text-align: left; margin: 0 auto; font-size: 1.3vw;">Create Account</label><br/><br/>\n\
+            <label for="username_reg">Username</label><br/>\n\
+            <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 6 characters.<br/>- Letters, numbers &amp; underscore only.</div>\n\
+            <input id="username_reg" type="text" placeholder="Username" maxlength="255" class="registerinput usernamereg"/><br/>\n\
+            <span class="status userregstatus"></span><br/>\n\
+            <label for="password_reg">Password</label><br/>\n\
+            <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 8 characters.<br/>- At least upper case letter.<br/>- At least 1 number.<br/>- At least 1 special character.</div>\n\
+            <input id="password_reg" type="password" placeholder="Password" maxlength="255" class="registerinput passwordreg"/><br/>\n\
+            <span class="status passregstatus"></span><br/>\n\
+            <label for="password_reg_repeat">Repeat Password</label><br/>\n\
+            <input id="password_reg_repeat" type="password" placeholder="Password" maxlength="255" class="registerinput passwordregrepeat"/><br/>\n\
+            <span class="status passregrepeatstatus"></span><br/>\n\
+            <label for="email_reg">Email Address</label><br/>\n\
+            <input id="email_reg" type="text" placeholder="username@example.com" maxlength="255" class="registerinput emailreg"/>\n\
+            <span class="status emailregstatus"></span><br/><br/><span class="status signupstatus" style="font-size: 1vw;"></span></div>');
+            
+            modal.append("<br/>");
+            modal.append(cancelButton);
+            modal.append(submitButton);
+            
+            // Add an overlay to the website
+            var overlay = $("<div>").addClass("overlay").addClass("modaloverlay");
+            
+            // Add the modal and overlay to the website
+            $("body").append(overlay).append(modal);
+            });
+          
+            
         $(document).on("click", ".dologin", function() 
         {
             var specified_username = $(".usernameinput").val();
             var specified_password = $(".passwordinput").val();
 
-            console.log(specified_username);
-            console.log(specified_password);
-
+            
             // try login
             $.ajax({
                 type: "POST",
@@ -1028,7 +1170,6 @@
                 },
                 success: function(response) 
                 {
-                    console.log(response);  
                     if (response == 'true')
                     {
                         $("#loginstatus").text('Login successful');
@@ -1079,87 +1220,3 @@
 
 
 
-        
-        $(document).on("click", ".doregister", function() 
-        {
-            // Create a modal
-            var modal = $("<div>").addClass("registermodal");
-            
-            // Create a cancel button
-            var cancelButton = $("<button>").text("Cancel").addClass("regmodalbutton").on("click", function() {
-                // Close the modal when the OK button is clicked
-                modal.remove();
-                $(".overlay").remove();
-            });
-
-            
-            // Create a submit button
-            var submitButton = $("<button>").text("Register").addClass("regmodalbutton").on("click", function() 
-            {
-                // Close the modal when the OK button is clicked
-
-                // get the inputs from the modal
-                var username_string = $('.usernamereg').val();
-                var password_string = $('.passwordreg').val();
-                var password_again_string = $('.passwordregrepeat').val();
-                var email_address_string = $('.emailreg').val();
-
-
-                // sign up
-                $.ajax({
-                    type: "POST",
-                    url: "./memberlings.php",
-                    data: {
-                        operation: 'createuser',
-                        user_name: username_string,
-                        pass_word: password_string,
-                        pass_word_again: password_again_string,
-                        email_address: email_address_string
-                    },
-                    success: function(response)
-                    {
-    
-                        console.log(response);
-                    
-                    }});
-
-
-//                modal.remove();
- //               $(".overlay").remove();
-            });
-            
-
-
-            // Add things
-            modal.append('<div style="text-align: center; margin: 0 auto; width: 80%;"><div style="text-align: left;"><br/>\n\
-            <label style="text-align: left; margin: 0 auto; font-size: 1.3vw;">Create Account</label><br/><br/>\n\
-            <label for="username_reg">Username</label><br/>\n\
-            <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 6 characters.<br/>- Letters, numbers &amp; underscore only.</div>\n\
-            <input id="username_reg" type="text" placeholder="Username" maxlength="255" class="registerinput usernamereg"/><br/>\n\
-            <span class="status userregstatus"></span><br/>\n\
-            <label for="password_reg">Password</label><br/>\n\
-            <div style="font-size: 0.9vw; line-height: 15px; padding-top: 4px;">- Minimum 8 characters.<br/>- At least upper case letter.<br/>- At least 1 number.<br/>- At least 1 special character.</div>\n\
-            <input id="password_reg" type="password" placeholder="Password" maxlength="255" class="registerinput passwordreg"/><br/>\n\
-            <span class="status passregstatus"></span><br/>\n\
-            <label for="password_reg_repeat">Repeat Password</label><br/>\n\
-            <input id="password_reg_repeat" type="password" placeholder="Password" maxlength="255" class="registerinput passwordregrepeat"/><br/>\n\
-            <span class="status passregrepeatstatus"></span><br/>\n\
-            <label for="email_reg">Email Address</label><br/>\n\
-            <input id="email_reg" type="text" placeholder="username@example.com" maxlength="255" class="registerinput emailreg"/>\n\
-            <span class="status emailregstatus"></span><br/></div>');
-            
-            modal.append("<br/>");
-            
-            
-            modal.append(cancelButton);
-            modal.append(submitButton);
-            
-            
-
-            // Add an overlay to the website
-            var overlay = $("<div>").addClass("overlay").addClass("modaloverlay");
-            
-            // Add the modal and overlay to the website
-            $("body").append(overlay).append(modal);
-            });
-          
