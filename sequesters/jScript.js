@@ -1,5 +1,6 @@
         var title_maxchars = 100;
         var body_maxchars = 1000;
+        var reply_maxchars = 1000;
         var link_maxchars = 200;
         var file_maxbytes = 200000;
         var file_b64_body = '';
@@ -206,6 +207,38 @@
 
         });
 
+
+        // check post body
+        $(document).on("input", ".reply_input", function() 
+        {
+            var reply = $(this).val();
+
+            var reply_length = reply.length;
+
+            if (reply_length >= reply_maxchars) 
+            {
+                var curtailed_value = reply.substring(0, reply.length - 1);
+                $(".reply_input").val(curtailed_value);
+                reply_length = reply.length;
+            }
+                
+            $(".charsleft_reply").text(reply_maxchars - reply.length);
+
+
+            if (reply.length > 0 && reply.length <= reply_maxchars)
+            {
+                post_ready = true;
+            }
+            else
+            {
+                post_ready = false;
+            }
+            check_can_post();
+
+        });
+
+
+
         // check link body
         $(document).on("input", ".link_input", function() 
         {
@@ -320,6 +353,7 @@
             $(".file_input").val('');
             select_post_type();
             $(".charsleft_title").text(title_maxchars);
+            $(".charsleft_reply").text(title_maxchars);
             $(".charsleft_body").text(body_maxchars);
             post_ready = false;
             check_can_post();
@@ -423,9 +457,14 @@
 
 
 
+
         $(document).on("click", ".loadposts", function() 
         {
+            loadposts(this);
+        });
 
+        function loadposts(thing)
+        {
             // set visible windows 
             // this is the 'posts' function so we want posts visible and thread/topics hidden
 
@@ -443,7 +482,7 @@
             // get topic id and topic name
             // getting topic name here seems shonky
             // must try something else
-            var topicID = this.id;
+            var topicID = thing.id;
 
             // let's find the posts 
             $.ajax({
@@ -476,7 +515,6 @@
                         {
                             
                             var topicname = response[i]['topic'];
-                            var titletopicname = (topicname.length > 40) ? topicname.substring(0, 40) + '...' : topicname;
                             var pathtopicname = (topicname.length > 20) ? topicname.substring(0, 20) + '...' : topicname; 
                             
                             $('.topicpathtext').empty();
@@ -484,7 +522,7 @@
                             $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page" name="'+topicname+'">front page</a>/'+pathtopicname+'/&nbsp;&nbsp;&nbsp;&nbsp;');
                 
                             // set topic name in title bar
-                            $('.topictitle').text(titletopicname);
+                            $('.topictitle').text(topicname);
                         }
 
 
@@ -521,9 +559,9 @@
                         $('.postwindow').append('<div class="postpackage" id="postpackage_'+postID+'">\n\
                             <div class="postslab">\n\
                                 <div id="reppanelpost" class="displayreppost">\n\
-                                    <button class="arrow up" title="Add Rep"> </button><br/>\n\
-                                    <span id="doot" class="repreadingpost">'+postrep+'</span><br/>\n\
-                                    <button class="arrow down" title="Reduce Rep"> </button>\n\
+                                    <button class="arrow up repup" title="Add Rep" id="'+postID+'"> </button><br/>\n\
+                                    <span id="doot" class="repreadingpost doot_'+postID+'">'+postrep+'</span><br/>\n\
+                                    <button class="arrow down repdown" title="Reduce Rep" id="'+postID+'"> </button>\n\
                                 </div>\n\
                                 <div class="postslabinner">\n\
                                 <div class="postlinktitle" id="'+topicID+'"><button class="topicbutton loadcomments" id="'+postID+'" name="'+topicname+'">'+posttitle+'</button></div>\n\
@@ -536,12 +574,18 @@
                 }
             });
 
-        });
+        }
 
 
         $(document).on("click", ".loadcomments", function() 
         {
 
+            loadthreads(this);
+
+        });
+
+        function loadthreads(thingy, pid, tid, tname)
+        {
             // set visible windows 
             // this is the 'threads' function so we want threads visible and topics/posts hidden
 
@@ -559,10 +603,18 @@
             // get topic id and topic name
             // getting topic name here seems shonky
             // must try something else
-            var postID = this.id;
-            var parenttopicname = this.name;
-            var parenttopicID = this.parentElement.id;
-            
+            if (!pid && !tid)
+            {
+                var postID = thingy.id;
+                var parenttopicname = thingy.name;
+                var parenttopicID = thingy.parentElement.id;
+            }
+            else
+            {
+                var postID = pid;
+                var parenttopicname = tname;
+                var parenttopicID = tid;
+            }
 
             // let's find the comments 
             $.ajax({
@@ -621,20 +673,20 @@
 
                     // output parent thread panel
 
-                    $('.threadwindow').append('<div class=\"displaypost\" id=\"always_zero\">\n\
-                    <div id=\"reppanel\" class=\"displayrep\">\n\
-                    <button class=\"arrow up\" title=\"Add Rep\"> </button><br/>\n\
-                    <span id=\"doot\" class=\"repreading\">'+parentreputation+'</span><br/>\n\
-                    <button class=\"arrow down\" title=\"Reduce Rep\"> </button><br/>\n\
+                    $('.threadwindow').append('<div class="displaypost" id="always_zero">\n\
+                    <div id="reppanel" class="displayrep">\n\
+                    <button class="arrow up repup" title="Add Rep" id="'+parentID+'"> </button><br/>\n\
+                    <span id="doot" class="repreading doot_'+parentID+'">'+parentreputation+'</span><br/>\n\
+                    <button class="arrow down repdown" title="Reduce Rep" id="'+parentID+'"> </button><br/>\n\
                     </div>\n\
-                    <div class=\"displaypostroot\">\n\
-                    <div class=\"posttitle\">'+parenttitle+'</div>\n\
-                    By <button class=\"profile_button\">'+parentowner+'</button><br/>\n\
+                    <div class="displaypostroot">\n\
+                    <div class="posttitle">'+parenttitle+'</div>\n\
+                    By <button class="profile_button">'+parentowner+'</button><br/>\n\
                     <br/>'+postinsert+'<br/>\n\
                     <br/><sup>'+parentcreated+'</sup><br/>\n\
-                    <button class=\"replybutton normalreply\" title=\"Reply\" name=\"'+parentID+'\">Reply</button>\n\
-                    <button class=\"replybutton quotereply\" title=\"Reply With Quote\" name=\"'+parentID+'\">Quote</button>\n\
-                    <button title=\"Delete\" class=\"deletebutton deletethread\" id=\"'+parentID+'\">Delete</button>\n\
+                    <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
+                    <button class="replybutton quotereply" title="Reply With Quote" name="'+parentID+'">Quote</button>\n\
+                    <button title="Delete" class="deletebutton deletethread" id="'+parentID+'">Delete</button>\n\
                     </div>\n\
                     </div>');    
 
@@ -645,11 +697,8 @@
                     
                     $('.topicpathtext').empty();
 
-                    $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page">front page</a>/<a href="#" class="go_home loadposts" id="'+parenttopicID+'" title="'+pathtoparenttopicname+'">'+pathtoparenttopicname+'</a>/'+pathtopicname+'&nbsp;&nbsp;&nbsp;&nbsp;');
+                    $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page">front page</a>/<a href="#" class="go_home loadposts" id="'+parenttopicID+'" title="'+parenttopicname+'">'+pathtoparenttopicname+'</a>/'+pathtopicname+'&nbsp;&nbsp;&nbsp;&nbsp;');
         
-                    // set topic name in title bar
-                    $('.topictitle').text(titletopicname);
-
 
                     // ok lets get the replies
 
@@ -671,30 +720,144 @@
 
                         $('.threadwindow').append('<div class="displayreply" id="incrementally_specified">\n\
                         <div id="reppanel" class="displayrep">\n\
-                        <button class="arrow up" title="Add Rep" id="'+replyID+'"> </button><br/>\n\
-                        <span id="doot" class="repreading">'+replyreputation+'</span><br/>\n\
-                        <button class="arrow down" title="Reduce Rep" id="'+replyID+'"> </button><br/>\n\
+                        <button class="arrow up repup" title="Add Rep" id="'+replyID+'"> </button><br/>\n\
+                        <span id="doot" class="repreading doot_'+replyID+'">'+replyreputation+'</span><br/>\n\
+                        <button class="arrow down repdown" title="Reduce Rep" id="'+replyID+'"> </button><br/>\n\
                         </div>\n\
                         <div class="displaypostroot">\n\
                         <span class="posttitle">RE: '+replytitle+'</span><br/>\n\
                         By <button class="profile_button">'+replyowner+'</button><br/>\n\
-                        <pre>'+replybody+'</pre>\n\
+                        <br/>'+replybody+'<br/><br/>\n\
                         <sup>'+replydatecreated+'</sup><br/>\n\
-                        <button class="replybutton normalreply" title="Reply" id="'+replyID+'">Reply</button>\n\
-                        <button class="replybutton quotereply" title="Reply With Quote" id="'+replyID+'">Quote</button>\n\
-                        <button title="Delete" class="deletebutton deletereply" id="'+replyID+'">Delete</button>\n\
+                        <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
+                        <button class="replybutton quotereply" title="Reply With Quote" name="'+parentID+'">Quote</button>\n\
+                        <button title="Delete" class="deletebutton deletethread" id="'+parentID+'">Delete</button>\n\
                         </div></div>');  
                     }
 
                 }
             });
 
-        });
+        }
 
 
+        $(document).on("click", ".normalreply", function() 
+        {
+            // Create a modal
+            var modal = $("<div>").addClass("replymodal");
+            
+            // Create a cancel button
+            var cancelButton = $("<button>").text("Cancel").addClass("modalbutton").on("click", function() {
+                // Close the modal when the OK button is clicked
+                modal.remove();
+                $(".overlay").remove();
+            });
+
+            var topicName = $('.topictitle').text();
+            var topicID = this.name;
+            var threadID = this.id;
+
+            // Create a submit button
+            var submitButton = $("<button>").text("Add Reply").addClass("modalbutton").on("click", function() {
+                // Close the modal when the OK button is clicked
+
+                console.log($('.reply_input').val());
+
+                var replystring = $('.reply_input').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "./backwash.php",
+                    data: {
+                        post_topic: topicID,
+                        post_body: replystring,
+                        post_ID: threadID
+                    },
+                    dataType: "json",
+                    success: function(response)
+                    {
+    
+                        reset_form();
+                        loadthreads(this,threadID,topicID,topicName);
+    
+                    
+                    },
+                    error: function(xhr, status, error)
+                    {
+                        reset_form();
+                    }
+                    });
 
 
+                modal.remove();
+                $(".overlay").remove();
+            });
+            
 
-        // do onloads
-        
-        //load_topics();
+
+            // Add things
+            modal.append('<div style="text-align: left; padding-left: 2vw; margin-bottom: 6px;"><br/>\n\
+            <label for="body_reply" style="text-align: left;">Add Reply</label></div>\n\
+            <textarea id="reply_input" class="replytextarea reply_input" placeholder="some text"></textarea><br/>\n\
+            <span class="charsleft charsleft_reply" style="float: right; padding: 0.8vw;">1000</span>');
+            
+            
+            modal.append(cancelButton);
+            modal.append(submitButton);
+            
+            
+            // Add an overlay to the website
+            var overlay = $("<div>").addClass("overlay").addClass("modaloverlay");
+            
+            // Add the modal and overlay to the website
+            $("body").append(overlay).append(modal);
+            });
+          
+          
+
+            $(document).on("click", ".repup", function() 
+            {
+
+                var postID = this.id;
+                
+                console.log('do rep up '+postID);
+
+
+                $.ajax({
+                    type: "GET",
+                    url: "./reps.php",
+                    data: {
+                        item_id: postID,
+                        rep_value: 'up',
+                    },
+                    success: function(response) 
+                    {
+                        console.log(response);
+                        $(".doot_"+postID).text(response);
+
+                    }
+                });
+
+            });
+
+            $(document).on("click", ".repdown", function() 
+            {
+
+                var postID = this.id;
+                
+                console.log('do repdown '+postID);
+                $.ajax({
+                    type: "GET",
+                    url: "./reps.php",
+                    data: {
+                        item_id: postID,
+                        rep_value: 'down',
+                    },
+                    success: function(response) 
+                    {
+                        console.log(response);
+                        $(".doot_"+postID).text(response);
+                    }
+                });
+            });
+

@@ -1,6 +1,6 @@
 <?php
 
-include('./dababase_connection.php');
+require_once('./database_connection.php');
 
 // get posts
 ////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ if ($get_type === 'post')
     $topictitle = htmlspecialchars($topicrow['title'], ENT_QUOTES);
     
     // still need to finish query to add limit, start, sort...
-    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' ORDER BY reputation, date_created DESC";
+    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' ORDER BY reputation DESC";
     $stmt = mysqli_prepare($database_connection, $query);
     mysqli_stmt_bind_param($stmt, "i", $topic_id);
     mysqli_stmt_execute($stmt);
@@ -145,37 +145,38 @@ if ($get_type === 'thread')
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $threadrow = mysqli_fetch_assoc($result);
-
+    
         // we need to get the Owner name when accounts are done
         $data ['threadowner'] = 'Username'; // $threadrow['ownerID'];
-
+    
         $data['id'] = $threadrow['id'];
         $data['threadtitle'] = htmlspecialchars($threadrow['title'], ENT_QUOTES, 'UTF-8');
-        $data['threadbody'] = htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8');
+        $data['threadbody'] = nl2br(htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8'));
         $data['threadtype'] = $threadrow['item_type'];
         $data['extension'] = $threadrow['extension'];
         $data['reputation'] = $threadrow['reputation'];
         $data['date_created'] = $threadrow['date_created'];
         $data['date_modified'] = $threadrow['date_modified'];
-
+    
         $replydata = [];
-
+    
         $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' ORDER BY reputation DESC";
         $stmt = mysqli_prepare($database_connection, $repliesquery);
         mysqli_stmt_bind_param($stmt, 'i', $post_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-
+    
         while ($row = mysqli_fetch_assoc($result)) 
         {
             $row['ownerID'] = ($row['ownerID'] == 0) ? $row['ownerID'] : 'User';
             $row['title'] = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
-            $row['body'] = htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8');
+            $row['body'] = nl2br(htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8'));
             $replydata[] = $row;
         }
-
+    
         $data['replies'] = $replydata;
     }
+    
 }
 
 

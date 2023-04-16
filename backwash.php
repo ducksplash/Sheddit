@@ -1,6 +1,6 @@
 <?php
 
-include('./dababase_connection.php');
+require_once('./database_connection.php');
 
 //echo "Connected successfully";
 
@@ -10,6 +10,7 @@ include('./dababase_connection.php');
 $post_type = (isset($_POST['post_type'])) ? (int)$_POST['post_type'] : 0;
 $title_string = (isset($_POST['post_title'])) ? make_valid_string($_POST['post_title']) : '';
 $topic_id = (isset($_POST['post_topic'])) ? $_POST['post_topic'] : 0;
+$post_id = (isset($_POST['post_ID'])) ? $_POST['post_ID'] : 0;
 $post_string = (isset($_POST['post_body'])) ? make_valid_string($_POST['post_body']) : '';
 $link_string = (isset($_POST['post_link'])) ? make_valid_string($_POST['post_link']) : '';
 $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_body']) : '';
@@ -21,11 +22,13 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     // Define the owner ID when accounts exist, use placeholders for now
     $ownerID = 1;
 
+
+
     // post basic text post
     if ($post_type === 0 || $post_type == "")
     {
 
-      $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string, $topic_id);
+      $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
       
     } 
 
@@ -44,6 +47,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
       $post_result = insert_file($database_connection, $ownerID, $title_string, $file_string, $topic_id);
       
     } 
+
 
 
 
@@ -84,34 +88,47 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert text post
 
-  function insert_post($dbc, $ownerID, $title, $body, $tid) 
+  function insert_post($dbc, $ownerID, $title, $body, $tid, $pid) 
   {
       // Prepare the SQL statement with placeholders
       $sql_check = "SELECT id FROM items WHERE title=? AND body=? LIMIT 1";
-      $sql_insert = "INSERT INTO items (ownerID, title, body, date_created, date_modified, tid) 
-                      VALUES (?, ?, ?, NOW(), NOW(), ?)";
+      $sql_insert = "INSERT INTO items (ownerID, title, body, lineage, pid, date_created, date_modified, tid) VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?)";
+    
+      if ($pid > 0)
+      {
+          $postlineage = 'reply';
+          $sql_title = "SELECT title FROM items WHERE id=? LIMIT 1";
+          $stmt_title = mysqli_prepare($dbc, $sql_title);
+          mysqli_stmt_bind_param($stmt_title, 'i', $pid);
+          mysqli_stmt_execute($stmt_title);
+          $title_result = mysqli_stmt_get_result($stmt_title);
+          $titlerow = mysqli_fetch_array($title_result);
+  
+          $title = $titlerow['title'];
+      }
+      else
+      {
+          $postlineage = 'post';
+      }
   
       // Prepare the statement
       $stmt_check = mysqli_prepare($dbc, $sql_check);
       $stmt_insert = mysqli_prepare($dbc, $sql_insert);
-  
+    
       // Bind parameters to the statement
       mysqli_stmt_bind_param($stmt_check, 'ss', $title_trimmed, $body_trimmed);
-      mysqli_stmt_bind_param($stmt_insert, 'isss', $ownerID, $title_trimmed, $body_trimmed, $tid);
-  
+      mysqli_stmt_bind_param($stmt_insert, 'isssii', $ownerID, $title, $body, $postlineage, $pid, $tid);
+    
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
-      $title = mysqli_real_escape_string($dbc, $title);
-      $body = mysqli_real_escape_string($dbc, $body);
-  
       $title_trimmed = (strlen($title) > 99) ? substr($title, 0, 100) : $title;
       $body_trimmed = (strlen($body) > 999) ? substr($body, 0, 1000) : $body;
-  
+    
       // Execute the statement to check if the item already exists
       mysqli_stmt_execute($stmt_check);
       $result = mysqli_stmt_get_result($stmt_check);
       $row = mysqli_fetch_array($result);
-  
+    
       if (strlen($title_trimmed) > 0 && strlen($body_trimmed) > 0)
       {
           if($row) 
@@ -124,7 +141,14 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
               // Execute the statement to insert the new item
               if (mysqli_stmt_execute($stmt_insert)) 
               {
-                  return "Post Saved";
+                  if ($postlineage === 'reply')
+                  {
+                    return $dbc->insert_id;
+                  }
+                  else
+                  {
+                    return "Post Saved";
+                  }
               } 
               else 
               {
@@ -136,12 +160,12 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
       {
           return "All fields must be filled";
       }
-      
+    
       // Close the statements
       mysqli_stmt_close($stmt_check);
       mysqli_stmt_close($stmt_insert);
   }
-  
+    
   
 
   // insert file post
