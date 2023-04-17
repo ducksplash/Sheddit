@@ -13,6 +13,7 @@
         var password_ready = false;
         var password_again_ready = false;
         var email_ready = false;
+        var sortingorder = 'reputation';
         
 
 
@@ -351,7 +352,7 @@
             {
 
                 // Check if the file is smaller than 1MB
-                if (file.size <= 5000000) 
+                if (file.size <= 6000000) 
                 {
                 // Create a new FileReader object
                 var reader = new FileReader();
@@ -549,7 +550,8 @@
                 },
                 data: {
                     get_type: 'post',
-                    topic_id: topicID
+                    topic_id: topicID,
+                    sort_order: sortingorder,
                 },
                 success: function(response) 
                 {
@@ -597,7 +599,7 @@
 
                         var postinsert = '';
                         var linkpost = "<div class='postlinkpreview'>No Preview Available</div>";
-                        var imgpost = "<div class='postimgpreview' id='"+topicID+"'><img class='previewimg loadcomments' id='"+postID+"' src='data:image/png;base64,"+postbody+"' name='"+topicname+"' alt='"+posttitle+"' /></div>";
+                        var imgpost = "<div class='postimgpreview' id="+topicID+"'><img class='previewimg loadcomments' id='"+postID+"' src='./img.php?imid="+postID+"' name='"+topicname+"' alt='"+posttitle+"' /></div>";
                         var textpost = "<div class='posttextpreview'>"+postbody+"</div>";
     
                         
@@ -717,7 +719,7 @@
 
                     var postinsert = '';
                     var linkpost = "<a class='outlink' href='"+parentbody+"'>"+parentbody+"</a>";
-                    var imgpost = "<img class='postimg' src='data:image/png;base64,"+parentbody+"' alt='"+parenttitle+"' />";
+                    var imgpost = "<a href='./img.php?imid="+parentID+"' target='_BLANK'><img class='postimg' src='./img.php?imid="+parentID+"' alt='"+parenttitle+"' /></a>";
                     var textpost = makeValidString(parentbody);
 
                     
@@ -937,27 +939,6 @@
                 });
             });
 
-            $(document).on("click", ".postimg", function(e) {
-                // Prevent default click behavior
-                e.preventDefault();
-            
-                // Get the source URL of the clicked image
-                var imgSrc = $(this).attr('src');
-            
-                // Create a new MouseEvent object
-                var event = new MouseEvent('contextmenu', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                });
-            
-                // Dispatch the event on the image element
-                $(this)[0].dispatchEvent(event);
-            
-                // Open the image in a new tab
-                window.open(imgSrc, '_blank');
-            });
-            
            
             
 
