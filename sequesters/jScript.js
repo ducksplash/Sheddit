@@ -22,7 +22,10 @@
         
             $.ajax({
                 type: "GET",
-                url: "./innitdoe.php",
+                url: "./innitdoe.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 success: function(response) 
                 {
                     $(".sitetitle").text(response);
@@ -35,7 +38,10 @@
             
             $.ajax({
                 type: "POST",
-                url: "./memberlings.php",
+                url: "./memberlings.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     operation: "guicheck",
                 },
@@ -85,7 +91,10 @@
                 
                 $.ajax({
                 type: "POST",
-                url: "./backwash.php",
+                url: "./backwash.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     post_type: post_type,
                     post_title: title_string,
@@ -456,7 +465,10 @@
             // let's find the topics 
             $.ajax({
                 type: "GET",
-                url: "./getbeefs.php",
+                url: "./getbeefs.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     get_type: 'topic'
                 },
@@ -531,7 +543,10 @@
             // let's find the posts 
             $.ajax({
                 type: "GET",
-                url: "./getbeefs.php",
+                url: "./getbeefs.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     get_type: 'post',
                     topic_id: topicID
@@ -572,6 +587,7 @@
 
                         var postID = response[i]['id'];
                         var posttitle = response[i]['title'];
+                        var postusername = response[i]['username'];
                         var postbody = response[i]['body'];
                         var posttype = parseInt(response[i]['item_type']);
                         var postreplies = response[i]['replies'];
@@ -608,7 +624,8 @@
                                     <button class="arrow down repdown" title="Reduce Rep" id="'+postID+'"> </button>\n\
                                 </div>\n\
                                 <div class="postslabinner">\n\
-                                <div class="postlinktitle" id="'+topicID+'"><button class="topicbutton loadcomments" id="'+postID+'" name="'+topicname+'">'+posttitle+'</button></div>\n\
+                                <div class="postlinktitle" id="'+topicID+'"><button class="topicbutton loadcomments" id="'+postID+'" name="'+topicname+'">'+posttitle+'</button>\n\
+                                <br/><sup>'+postusername+'</sup></div>\n\
                                 <div>'+postinsert+'</div>\n\
                                 </div>\n\
                             </div>\n\
@@ -663,7 +680,10 @@
             // let's find the comments 
             $.ajax({
                 type: "GET",
-                url: "./getbeefs.php",
+                url: "./getbeefs.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     get_type: 'thread',
                     post_id: postID
@@ -684,7 +704,8 @@
 
                     // get main comment first
 
-                    var parentowner = response['threadowner'];
+                    var parentowner = response['threadusername'];
+                    var parentownerID = response['ownerID'];
                     var parentID = response['id'];
                     var parenttitle = response['threadtitle'];
                     var parentbody = response['threadbody'];
@@ -726,7 +747,7 @@
                     </div>\n\
                     <div class="displaypostroot">\n\
                     <div class="posttitle">'+parenttitle+'</div>\n\
-                    By <button class="profile_button">'+parentowner+'</button><br/>\n\
+                    By <button class="profile_button" id="'+parentownerID+'">'+parentowner+'</button><br/>\n\
                     <br/>'+postinsert+'<br/>\n\
                     <br/><sup>'+parentcreated+'</sup><br/>\n\
                     <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
@@ -755,6 +776,7 @@
                         var replyID = response['replies'][i]['id'];
                         var replytitle = response['replies'][i]['title'];
                         var replyowner = response['replies'][i]['ownerID'];
+                        var replyusername = response['replies'][i]['username'];
                         var replybody = response['replies'][i]['body'];
                         var replytype = response['replies'][i]['item_type'];
                         var replyreputation = response['replies'][i]['reputation'];
@@ -771,7 +793,7 @@
                         </div>\n\
                         <div class="displaypostroot">\n\
                         <span class="posttitle">RE: '+replytitle+'</span><br/>\n\
-                        By <button class="profile_button">'+replyowner+'</button><br/>\n\
+                        By <button class="profile_button" id="'+replyowner+'">'+replyusername+'</button><br/>\n\
                         <br/>'+replybody+'<br/><br/>\n\
                         <sup>'+replydatecreated+'</sup><br/>\n\
                         <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
@@ -812,7 +834,10 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "./backwash.php",
+                    url: "./backwash.php", 
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     data: {
                         post_topic: topicID,
                         post_body: replystring,
@@ -870,7 +895,10 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "./reps.php",
+                    url: "./reps.php", 
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     data: {
                         item_id: postID,
                         rep_value: 'up',
@@ -893,7 +921,10 @@
                 console.log('do repdown '+postID);
                 $.ajax({
                     type: "GET",
-                    url: "./reps.php",
+                    url: "./reps.php", 
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     data: {
                         item_id: postID,
                         rep_value: 'down',
@@ -943,7 +974,10 @@
 
         $.ajax({
             type: "POST",
-            url: "./memberlings.php",
+            url: "./memberlings.php", 
+            xhrFields: {
+                withCredentials: true
+            },
             data: {
                 operation: 'namecheck',
                 user_name: usernameslug,
@@ -1082,7 +1116,10 @@
                 // sign up
                 $.ajax({
                     type: "POST",
-                    url: "./memberlings.php",
+                    url: "./memberlings.php", 
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     data: {
                         operation: 'createuser',
                         user_name: username_string,
@@ -1162,7 +1199,10 @@
             // try login
             $.ajax({
                 type: "POST",
-                url: "./memberlings.php",
+                url: "./memberlings.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     user_name: specified_username,
                     pass_word: specified_password,
@@ -1194,7 +1234,10 @@
             // try login
             $.ajax({
                 type: "POST",
-                url: "./memberlings.php",
+                url: "./memberlings.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     operation: 'logoutuser'
                 },

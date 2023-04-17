@@ -26,9 +26,9 @@ if (isset($_COOKIE["sesh"]))
 
     $stored_sesh = $userrow['sesh'];
     $stored_user_agent = $userrow['user_agent'];
+    $ownerID = $userrow['id'];
 
     $userstmt->close();
-
 
     if (strlen($stored_sesh) > 0)
     {
@@ -37,6 +37,7 @@ if (isset($_COOKIE["sesh"]))
         {    
             $cookie_username = $userrow['username'];
             $loggedin = true;
+
         }
         else
         {
@@ -55,6 +56,7 @@ else
 
 
 
+
 $post_type = (isset($_POST['post_type'])) ? (int)$_POST['post_type'] : 0;
 $title_string = (isset($_POST['post_title'])) ? make_valid_string($_POST['post_title']) : '';
 $topic_id = (isset($_POST['post_topic'])) ? $_POST['post_topic'] : 0;
@@ -67,8 +69,6 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 //die();
 
     
-    // Define the owner ID when accounts exist, use placeholders for now
-    $ownerID = 1;
 
     if ($loggedin)
     {
@@ -77,7 +77,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         if ($post_type === 0 || $post_type == "")
         {
 
-        $post_result = insert_post($database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
+        $post_result = insert_post($cookie_username, $database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
         
         } 
 
@@ -85,7 +85,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         if ($post_type === 1)
         {
 
-        $post_result = insert_link($database_connection, $ownerID, $title_string, $link_string, $topic_id);
+        $post_result = insert_link($cookie_username, $database_connection, $ownerID, $title_string, $link_string, $topic_id);
         
         } 
 
@@ -93,7 +93,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         if ($post_type === 2)
         {
 
-        $post_result = insert_file($database_connection, $ownerID, $title_string, $file_string, $topic_id);
+        $post_result = insert_file($cookie_username, $database_connection, $ownerID, $title_string, $file_string, $topic_id);
         
         } 
 
@@ -140,11 +140,11 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert text post
 
-  function insert_post($dbc, $ownerID, $title, $body, $tid, $pid) 
+  function insert_post($insert_username, $dbc, $ownerID, $title, $body, $tid, $pid) 
   {
       // Prepare the SQL statement with placeholders
       $sql_check = "SELECT id FROM items WHERE title=? AND body=? LIMIT 1";
-      $sql_insert = "INSERT INTO items (ownerID, title, body, lineage, pid, date_created, date_modified, tid) VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?)";
+      $sql_insert = "INSERT INTO items (ownerID, username, title, body, lineage, pid, date_created, date_modified, tid) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)";
     
       if ($pid > 0)
       {
@@ -169,7 +169,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     
       // Bind parameters to the statement
       mysqli_stmt_bind_param($stmt_check, 'ss', $title_trimmed, $body_trimmed);
-      mysqli_stmt_bind_param($stmt_insert, 'isssii', $ownerID, $title, $body, $postlineage, $pid, $tid);
+      mysqli_stmt_bind_param($stmt_insert, 'issssii', $ownerID, $insert_username, $title, $body, $postlineage, $pid, $tid);
     
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
@@ -203,7 +203,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
                   }
               } 
               else 
-              {
+              {  
                   return "An Error Occured [1]";
               }
           }
@@ -222,7 +222,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert file post
 
-  function insert_file($dbc, $ownerID, $title, $filestring, $tid) 
+  function insert_file($insert_username, $dbc, $ownerID, $title, $filestring, $tid) 
   {
       // Escape the values to prevent SQL injection
       $ownerID = mysqli_real_escape_string($dbc, $ownerID);
@@ -286,13 +286,13 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
                 return "File Already Saved";
             } else {
                 // Construct the SQL query to insert the new item
-                $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, extension, date_created, date_modified, tid) VALUES (?, 2, ?, ?, ?, NOW(), NOW(), ?)";
+                $sql_insert = "INSERT INTO items (ownerID, username, item_type, title, body, extension, date_created, date_modified, tid) VALUES (?, ?, 2, ?, ?, ?, NOW(), NOW(), ?)";
     
                 // Prepare the statement
                 $stmt = mysqli_prepare($dbc, $sql_insert);
     
                 // Bind the parameters
-                mysqli_stmt_bind_param($stmt, "isssi", $ownerID, $title_trimmed, $filestring, $extension, $tid);
+                mysqli_stmt_bind_param($stmt, "issssi", $ownerID, $insert_username, $title_trimmed, $filestring, $extension, $tid);
     
                 // Execute the statement
                 if (mysqli_stmt_execute($stmt)) {
@@ -314,7 +314,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 
   // insert link post
 
-  function insert_link($dbc, $ownerID, $title, $linkurl, $tid) 
+  function insert_link($insert_username, $dbc, $ownerID, $title, $linkurl, $tid) 
   {
       // check and amend URL
       if (!preg_match("~^(?:f|ht)tps?://~i", $linkurl)) {
@@ -350,14 +350,14 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
           else 
           {
               // Construct the SQL query to insert the new item
-              $sql_insert = "INSERT INTO items (ownerID, item_type, title, body, date_created, date_modified, tid) 
-                             VALUES (?, 1, ?, ?, NOW(), NOW(), ?)";
+              $sql_insert = "INSERT INTO items (ownerID, username, item_type, title, body, date_created, date_modified, tid) 
+                             VALUES (?, ?, 1, ?, ?, NOW(), NOW(), ?)";
       
               // Prepare the SQL query
               $stmt = mysqli_prepare($dbc, $sql_insert);
       
               // Bind parameters to the prepared statement
-              mysqli_stmt_bind_param($stmt, "sssi", $ownerID, $title_trimmed, $linkurl_trimmed, $tid);
+              mysqli_stmt_bind_param($stmt, "isssi", $ownerID, $insert_username, $title_trimmed, $linkurl_trimmed, $tid);
       
               // Execute the prepared statement
               if (mysqli_stmt_execute($stmt)) 

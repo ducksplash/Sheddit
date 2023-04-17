@@ -2,9 +2,6 @@
 
 require_once('./database_connection.php');
 
-// get posts
-////////////////////////////////////////////////////////
-
 // set fallback vars
 $topictitle = 'main';
 
@@ -81,6 +78,7 @@ if ($get_type === 'post')
     mysqli_stmt_execute($topicstmt);
     $topicresult = mysqli_stmt_get_result($topicstmt);
     $topicrow = mysqli_fetch_assoc($topicresult);
+    $topicstmt->close();
 
     $topictitle = htmlspecialchars($topicrow['title'], ENT_QUOTES);
     
@@ -90,6 +88,7 @@ if ($get_type === 'post')
     mysqli_stmt_bind_param($stmt, "i", $topic_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
+    $stmt->close();
 
     $topiccounter = 0;
     while ($row = mysqli_fetch_assoc($result)) 
@@ -97,6 +96,7 @@ if ($get_type === 'post')
         // while we're here, let's count how many posts are in this topic
 
         $post_id = (isset($row['id'])) ? (int)$row['id'] : (int)0;
+
         // Prepare the SQL statement
         // SQL query
         $sql = "SELECT COUNT(*) FROM items WHERE pid = ? AND lineage = 'reply'";
@@ -146,13 +146,12 @@ if ($get_type === 'thread')
         $result = mysqli_stmt_get_result($stmt);
         $threadrow = mysqli_fetch_assoc($result);
     
-        // we need to get the Owner name when accounts are done
-        $data ['threadowner'] = 'Username'; // $threadrow['ownerID'];
     
         $data['id'] = $threadrow['id'];
         $data['threadtitle'] = htmlspecialchars($threadrow['title'], ENT_QUOTES, 'UTF-8');
         $data['threadbody'] = nl2br(htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8'));
         $data['threadtype'] = $threadrow['item_type'];
+        $data['threadusername'] = $threadrow['username'];
         $data['extension'] = $threadrow['extension'];
         $data['reputation'] = $threadrow['reputation'];
         $data['date_created'] = $threadrow['date_created'];
@@ -168,7 +167,7 @@ if ($get_type === 'thread')
     
         while ($row = mysqli_fetch_assoc($result)) 
         {
-            $row['ownerID'] = ($row['ownerID'] == 0) ? $row['ownerID'] : 'User';
+            $row['ownerID'] = ($row['ownerID'] == 0) ? $row['ownerID'] : '0';
             $row['title'] = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
             $row['body'] = nl2br(htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8'));
             $replydata[] = $row;

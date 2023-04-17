@@ -1,6 +1,8 @@
 <?php
 
 require_once('./database_connection.php');
+header("Access-Control-Allow-Origin: localhost");
+
 
 //echo "Connected successfully";
 
@@ -68,10 +70,10 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
             setcookie('sesh', $session_id, [
                 'expires' => time() + (86400 * 240),
                 'path' => '/',
-                'domain' => '',
+                'domain' => 'localhost',
                 'secure' => true,
-                'httponly' => true,
-                'samesite' => 'Strict'
+                'httponly' => false,
+                'samesite' => 'None'
             ]);            
 
             echo "true";
@@ -103,7 +105,7 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
                 'path' => '/',
                 'domain' => '',
                 'secure' => true,
-                'httponly' => true,
+                'httponly' => false,
                 'samesite' => 'Strict'
             ]);            
 
@@ -208,7 +210,7 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
 
         // insert the new user
         $sql_insert = "INSERT INTO users (username, password, salt, email, user_agent) 
-                    VALUES (?, ?, ?, ?)";
+                    VALUES (?, ?, ?, ?, ?)";
     
         // Prepare the SQL query
         $stmt = mysqli_prepare($database_connection, $sql_insert);
