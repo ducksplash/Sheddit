@@ -137,7 +137,11 @@ $operation = (isset($_POST['operation'])) ? $_POST['operation'] : 'do nothing';
             {
                 if ($stored_user_agent === $user_agent)
                 {                
-                    echo $userrow['username'];
+                    $bread = [];
+                    $bread['username'] = $userrow['username'];
+                    $bread['userID'] = $userrow['id'];
+                    $bread['userlevel'] = $userrow['userlevel'];
+                    echo json_encode($bread);
                 }
                 else
                 {

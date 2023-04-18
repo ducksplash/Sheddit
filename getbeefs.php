@@ -96,6 +96,7 @@ if ($get_type === 'post')
         // while we're here, let's count how many posts are in this topic
 
         $post_id = (isset($row['id'])) ? (int)$row['id'] : (int)0;
+        $owner_id = (isset($row['ownerID'])) ? (int)$row['ownerID'] : (int)0;
 
         // Prepare the SQL statement
         // SQL query
@@ -113,11 +114,25 @@ if ($get_type === 'post')
 
         $stmt->close();
 
+        $zquery = "SELECT userlevel FROM users WHERE id=?";
+        $zstmt = mysqli_prepare($database_connection, $zquery);
+        mysqli_stmt_bind_param($zstmt, "i", $owner_id);
+        mysqli_stmt_execute($zstmt);
+        $zresult = mysqli_stmt_get_result($zstmt);
+        $zstmt->close();
+        $zrow = mysqli_fetch_assoc($zresult);
+
+        $row['deleted'] = ($row['date_deleted'] === '0000-00-00 00:00:00') ? 'false' : 'true';
+
+        $row['userlevel'] = $zrow['userlevel'];
+
         $row['replies'] = $count;
 
         $row['topic'] = $topictitle;
 
-        $row['body'] = htmlspecialchars($row['body'], ENT_QUOTES);
+        $row['title'] = ($row['deleted'] === 'false') ? htmlspecialchars($row['title'], ENT_QUOTES) : 'Deleted';
+
+        $row['body'] = ($row['deleted'] === 'false') ? htmlspecialchars($row['body'], ENT_QUOTES) : 'Deleted';
 
         $data[] = $row;
     }
@@ -144,19 +159,33 @@ if ($get_type === 'thread')
         mysqli_stmt_bind_param($stmt, 'i', $post_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
+        $stmt->close();
         $threadrow = mysqli_fetch_assoc($result);
     
-    
+        $ownerID = $threadrow['ownerID'];
         $data['id'] = $threadrow['id'];
-        $data['threadtitle'] = htmlspecialchars($threadrow['title'], ENT_QUOTES, 'UTF-8');
-        $data['threadbody'] = nl2br(htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8'));
+        $data['deleted'] = ($threadrow['date_deleted'] === '0000-00-00 00:00:00') ? 'false' : 'true';
+        $data['threadtitle'] = ($data['deleted'] === 'false') ? htmlspecialchars($threadrow['title'], ENT_QUOTES, 'UTF-8') : 'Deleted';
+        $data['threadbody'] = ($data['deleted'] === 'false') ? nl2br(htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8')) : 'Deleted';
         $data['threadtype'] = $threadrow['item_type'];
         $data['threadusername'] = $threadrow['username'];
+        // $data['threaduserlevel'] = $threadrow['userlevel'];
         $data['extension'] = $threadrow['extension'];
         $data['reputation'] = $threadrow['reputation'];
         $data['date_created'] = $threadrow['date_created'];
         $data['date_modified'] = $threadrow['date_modified'];
-    
+
+        $zquery = "SELECT userlevel FROM users WHERE id=?";
+        $zstmt = mysqli_prepare($database_connection, $zquery);
+        mysqli_stmt_bind_param($zstmt, "i", $ownerID);
+        mysqli_stmt_execute($zstmt);
+        $zresult = mysqli_stmt_get_result($zstmt);
+        $zstmt->close();
+        $zrow = mysqli_fetch_assoc($zresult);
+
+        $data['userlevel'] = $zrow['userlevel'];
+
+
         $replydata = [];
     
         $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' ORDER BY reputation DESC";
@@ -164,12 +193,27 @@ if ($get_type === 'thread')
         mysqli_stmt_bind_param($stmt, 'i', $post_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-    
+        $stmt->close();
+
         while ($row = mysqli_fetch_assoc($result)) 
         {
-            $row['ownerID'] = ($row['ownerID'] == 0) ? $row['ownerID'] : '0';
-            $row['title'] = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
-            $row['body'] = nl2br(htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8'));
+
+
+            $zquery = "SELECT userlevel FROM users WHERE id=?";
+            $zstmt = mysqli_prepare($database_connection, $zquery);
+            mysqli_stmt_bind_param($zstmt, "i", $row['ownerID']);
+            mysqli_stmt_execute($zstmt);
+            $zresult = mysqli_stmt_get_result($zstmt);
+            $zstmt->close();
+            $zrow = mysqli_fetch_assoc($zresult);
+    
+            $row['userlevel'] = $zrow['userlevel'];
+            $row['deleted'] = ($row['date_deleted'] === '0000-00-00 00:00:00') ? 'false' : 'true';
+
+    
+
+            $row['title'] = ($row['deleted'] === 'false') ? htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8') : 'Deleted';
+            $row['body'] = ($row['deleted'] === 'false') ? nl2br(htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8')) : 'Deleted';
             $replydata[] = $row;
         }
     

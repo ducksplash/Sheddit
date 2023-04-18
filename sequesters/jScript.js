@@ -48,15 +48,36 @@
                 },
                 success: function(response) 
                 {
-
+                    console.log(response);
                     if (response != "false")
                     {
+                        var resource = JSON.parse(response);
+                        var membertype = '';
+
+                        if (resource['userlevel'] == -1)
+                        {
+                            membertype = '<br/>(<span style="color: #CC0000;">Banned</span>)';
+                        }
+                        else if (resource['userlevel'] == 1)
+                        {
+                            membertype = '<br/>(<span style="color: #00CC00;">Moderator</span>)';
+                        }
+                        else if (resource['userlevel'] == 2)
+                        {
+                            membertype = '<br/>(<span style="color: #0000CC;">Admin</span>)';
+                        }
+                        else
+                        {
+                            membertype = '';    
+                        }
 
                         // switch out panel
                         $("#account").empty();
-                        $("#account").append('<div style="text-align: center;">Logged in as<br/>'+response+'<br/><br/>\n\
+                        $("#account").append('<div style="text-align: center;">Logged in as<br/>'+resource['username']+membertype+'<br/><br/>\n\
                         <button id="logout_button" class="logoutbutton dologout">Log Out</button>\n\
                         </div>');
+
+
                     }
                 }
             });
@@ -487,7 +508,7 @@
                         var topicpostcount = response[i]['posts'];
                         var topicreplycount = response[i]['replies'];
                         var lastpostdate = response[i]['lastpost'];
-
+                        
                         
                         $("#post_topic").append("<option value='"+topicID+"'>"+topicname+"</option>");
                         
@@ -551,7 +572,7 @@
                 data: {
                     get_type: 'post',
                     topic_id: topicID,
-                    sort_order: sortingorder,
+                    sort_order: sortingorder
                 },
                 success: function(response) 
                 {
@@ -590,13 +611,32 @@
                         var postID = response[i]['id'];
                         var posttitle = response[i]['title'];
                         var postusername = response[i]['username'];
+                        var postuserlevel = response[i]['userlevel'];
                         var postbody = response[i]['body'];
                         var posttype = parseInt(response[i]['item_type']);
                         var postreplies = response[i]['replies'];
                         var postrep = response[i]['reputation'];
 
-                        console.log('item type'+posttype);
 
+                        var membername = '';
+                        if (postuserlevel == -1)
+                        {
+                            membername = '<span style="color: #CC0000;">'+postusername+'</span>';
+                        }
+                        else if (postuserlevel == 1)
+                        {
+                            membername = '<span style="color: #00CC00;">'+postusername+'</span>';
+                        }
+                        else if (postuserlevel == 2)
+                        {
+                            membername = '<span style="color: #0000CC;">'+postusername+'</span>';
+                        }
+                        else
+                        {
+                            membername = '<span style="color: #404040;">'+postusername+'</span>';
+                        }
+                        
+                        
                         var postinsert = '';
                         var linkpost = "<div class='postlinkpreview'>No Preview Available</div>";
                         var imgpost = "<div class='postimgpreview' id="+topicID+"'><img class='previewimg loadcomments' id='"+postID+"' src='./img.php?imid="+postID+"' name='"+topicname+"' alt='"+posttitle+"' /></div>";
@@ -627,7 +667,7 @@
                                 </div>\n\
                                 <div class="postslabinner">\n\
                                 <div class="postlinktitle" id="'+topicID+'"><button class="topicbutton loadcomments" id="'+postID+'" name="'+topicname+'">'+posttitle+'</button>\n\
-                                <br/><sup>'+postusername+'</sup></div>\n\
+                                <br/><sup>'+membername+'</sup></div>\n\
                                 <div>'+postinsert+'</div>\n\
                                 </div>\n\
                             </div>\n\
@@ -715,7 +755,29 @@
                     var parentreputation = response['reputation'];
                     var parentcreated = response['date_created'];
                     var parentmodified = response['date_modified'];
+                    var userlevel = response['userlevel'];
 
+                    
+                        
+                    var membername = '';
+                    if (userlevel == -1)
+                    {
+                        membername = '<span style="color: #CC0000;">'+parentowner+'</span>';
+                    }
+                    else if (userlevel == 1)
+                    {
+                        membername = '<span style="color: #00CC00;">'+parentowner+'</span>';
+                    }
+                    else if (userlevel == 2)
+                    {
+                        membername = '<span style="color: #0000CC;">'+parentowner+'</span>';
+                    }
+                    else
+                    {
+                        membername = '<span style="color: #404040;">'+parentowner+'</span>';
+                    }
+                    
+                    
 
                     var postinsert = '';
                     var linkpost = "<a class='outlink' href='"+parentbody+"'>"+parentbody+"</a>";
@@ -749,7 +811,7 @@
                     </div>\n\
                     <div class="displaypostroot">\n\
                     <div class="posttitle">'+parenttitle+'</div>\n\
-                    By <button class="profile_button" id="'+parentownerID+'">'+parentowner+'</button><br/>\n\
+                    By <button class="profile_button" id="'+parentownerID+'">'+membername+'</button><br/>\n\
                     <br/>'+postinsert+'<br/>\n\
                     <br/><sup>'+parentcreated+'</sup><br/>\n\
                     <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
@@ -785,7 +847,28 @@
                         var replydatecreated = response['replies'][i]['date_created'];
                         var replydatemodified = response['replies'][i]['date_modified'];
                         
+                        var userlevel = response['replies'][i]['userlevel'];
 
+                    
+                        
+                        var membername = '';
+                        if (userlevel == -1)
+                        {
+                            membername = '<span style="color: #CC0000;">'+replyusername+'</span>';
+                        }
+                        else if (userlevel == 1)
+                        {
+                            membername = '<span style="color: #00CC00;">'+replyusername+'</span>';
+                        }
+                        else if (userlevel == 2)
+                        {
+                            membername = '<span style="color: #0000CC;">'+replyusername+'</span>';
+                        }
+                        else
+                        {
+                            membername = '<span style="color: #404040;">'+replyusername+'</span>';
+                        }
+                        
 
                         $('.threadwindow').append('<div class="displayreply" id="incrementally_specified">\n\
                         <div id="reppanel" class="displayrep">\n\
@@ -795,7 +878,7 @@
                         </div>\n\
                         <div class="displaypostroot">\n\
                         <span class="posttitle">RE: '+replytitle+'</span><br/>\n\
-                        By <button class="profile_button" id="'+replyowner+'">'+replyusername+'</button><br/>\n\
+                        By <button class="profile_button" id="'+replyowner+'">'+membername+'</button><br/>\n\
                         <br/>'+replybody+'<br/><br/>\n\
                         <sup>'+replydatecreated+'</sup><br/>\n\
                         <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\

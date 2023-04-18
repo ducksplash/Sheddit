@@ -159,10 +159,10 @@ a.outlink:hover {
     font-weight: bold;
     text-decoration: none;
     border: none;
+    border: 0.1px solid #ffffff;
 }
 .profile_button:hover {
-    background-color: #404040;
-    color: #ffffff;
+    border: 0.1px solid #404040;
 }
 .topicbutton {
     background-color: #FFFFFF;
@@ -634,7 +634,7 @@ select.postlimit:hover {
 
 
 .postimg {
-    width: 30vw;
+    max-width: 30vw;
 }
 .previewimg {
     width: 8vw;

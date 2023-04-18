@@ -27,6 +27,7 @@ if (isset($_COOKIE["sesh"]))
     $stored_sesh = $userrow['sesh'];
     $stored_user_agent = $userrow['user_agent'];
     $ownerID = $userrow['id'];
+    $userlevel = $userrow['userlevel'];
 
     $userstmt->close();
 
@@ -35,8 +36,15 @@ if (isset($_COOKIE["sesh"]))
         // this makes stealing cookies more awkward, but still not impossible
         if ($user_agent === $stored_user_agent)
         {    
-            $cookie_username = $userrow['username'];
-            $loggedin = true;
+            if ($userlevel > -1)
+            {
+                $cookie_username = $userrow['username'];
+                $loggedin = true;
+            }
+            else
+            {
+                $loggedin = false;                
+            }
 
         }
         else
