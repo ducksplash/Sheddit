@@ -816,7 +816,7 @@
                     <br/><sup>'+parentcreated+'</sup><br/>\n\
                     <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
                     <button class="replybutton quotereply" title="Reply With Quote" name="'+parentID+'">Quote</button>\n\
-                    <button title="Delete" class="deletebutton deletethread" id="'+parentID+'">Delete</button>\n\
+                    <button title="Delete" class="deletebutton deleteitem" id="'+parentID+'">Delete</button>\n\
                     </div>\n\
                     </div>');    
 
@@ -883,7 +883,7 @@
                         <sup>'+replydatecreated+'</sup><br/>\n\
                         <button class="replybutton normalreply" title="Reply" id="'+parentID+'" name="'+parenttopicID+'">Reply</button>\n\
                         <button class="replybutton quotereply" title="Reply With Quote" name="'+parentID+'">Quote</button>\n\
-                        <button title="Delete" class="deletebutton deletethread" id="'+parentID+'">Delete</button>\n\
+                        <button title="Delete" class="deletebutton deleteitem" id="'+replyID+'">Delete</button>\n\
                         </div></div>');  
                     }
 
@@ -1327,3 +1327,31 @@
 
 
 
+        $(document).on("click", ".deleteitem", function() 
+        {
+            var itemID = $(this).attr('id');
+            delete_item(itemID);
+        });
+
+        function delete_item(item_id)
+        {
+            console.log('delete: '+item_id);
+
+            $.ajax({
+                type: "POST",
+                url: "./backwash.php",
+                data: {
+                    post_type: '666',
+                    item_id: item_id,
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(response) 
+                {
+                    console.log('response: '+response);
+                }
+            });
+
+
+        }

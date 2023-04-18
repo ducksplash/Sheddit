@@ -43,6 +43,7 @@ if (isset($_COOKIE["sesh"]))
             }
             else
             {
+                // user is banned
                 $loggedin = false;                
             }
 
@@ -66,6 +67,7 @@ else
 
 
 $post_type = (isset($_POST['post_type'])) ? (int)$_POST['post_type'] : 0;
+$item_id = (isset($_POST['item_id'])) ? $_POST['item_id'] : 0;
 $title_string = (isset($_POST['post_title'])) ? make_valid_string($_POST['post_title']) : '';
 $topic_id = (isset($_POST['post_topic'])) ? $_POST['post_topic'] : 0;
 $post_id = (isset($_POST['post_ID'])) ? $_POST['post_ID'] : 0;
@@ -85,7 +87,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         if ($post_type === 0 || $post_type == "")
         {
 
-        $post_result = insert_post($cookie_username, $database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
+            $post_result = insert_post($cookie_username, $database_connection, $ownerID, $title_string, $post_string, $topic_id, $post_id);
         
         } 
 
@@ -93,7 +95,7 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         if ($post_type === 1)
         {
 
-        $post_result = insert_link($cookie_username, $database_connection, $ownerID, $title_string, $link_string, $topic_id);
+            $post_result = insert_link($cookie_username, $database_connection, $ownerID, $title_string, $link_string, $topic_id);
         
         } 
 
@@ -101,8 +103,17 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
         if ($post_type === 2)
         {
 
-        $post_result = insert_file($cookie_username, $database_connection, $ownerID, $title_string, $file_string, $topic_id);
+            $post_result = insert_file($cookie_username, $database_connection, $ownerID, $title_string, $file_string, $topic_id);
         
+        } 
+
+        // delete a post
+        if ($post_type === 666)
+        {
+            // delete a message
+            $post_result = delete_post($database_connection, $ownerID, $item_id, $userlevel);
+            
+
         } 
 
     }
@@ -383,7 +394,49 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
           return "All fields must be filled";
       }
   }
+
   
+
+
+  function delete_post($dbc, $ownerID, $item_id, $userlevel)
+  {
+
+
+    $zquery = "SELECT * FROM items WHERE id=?";
+    $zstmt = mysqli_prepare($dbc, $zquery);
+    mysqli_stmt_bind_param($zstmt, "i", $item_id);
+    mysqli_stmt_execute($zstmt);
+    $zresult = mysqli_stmt_get_result($zstmt);
+    $zstmt->close();
+    $zrow = mysqli_fetch_assoc($zresult);
+
+    
+
+    if ($userlevel > 0 || intval($zrow['ownerID']) === intval($ownerID))
+    {
+        // user is admin/mod, or user is owner.
+        // tested
+
+        // now check if it is a post or a comment.
+        // if it is a post, all of it's child comments must also be deleted.
+        
+        if (strtolower($zrow['lineage']) === 'post')
+        {
+            return 'post';
+        }    
+
+        if (strtolower($zrow['lineage']) === 'reply')
+        {
+            return 'reply';
+        }    
+
+    }
+
+    // print('<pre>');
+    // print_r($zrow);
+    // print('</pre>');
+
+  }
   
 
 ?>
