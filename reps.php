@@ -34,6 +34,7 @@ if ($countreps < 1) {
     $stmtx = $database_connection->prepare("UPDATE reps SET repvalue = ? WHERE ownerID = ? AND itemID = ?");
     $stmtx->bind_param("sii", $rep_val, $ownerID, $item_id);
     $stmtx->execute();
+    $stmtx->close();
     
     
     if ($my_current_rep === 'up') 
@@ -60,7 +61,6 @@ if ($countreps < 1) {
     }
     
 }
-$stmtx->close();
 
 // Update item reputation in database and print new rep value
 $stmty = $database_connection->prepare("UPDATE items SET reputation = ? WHERE id = ?");

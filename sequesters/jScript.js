@@ -13,7 +13,7 @@
         var password_ready = false;
         var password_again_ready = false;
         var email_ready = false;
-        var sortingorder = 'reputation';
+        
         
 
         if (!initialised)
@@ -96,7 +96,8 @@
             console.log('<for seo urls> get thread:'+get_thread);
             
             load_topics();
-            setTimeout(function() {
+            setTimeout(function() 
+            {
               loadthreads(this, get_thread, get_topic, 'thread');
             }, 500);
             
@@ -521,6 +522,11 @@
             // empty topic list
             $('.post_topic').empty();
 
+            // get sort order
+            var sort_by = $('.sort_by').val();
+
+            // get limit
+            $('.post_topic').empty();
 
             // let's find the topics 
             $.ajax({
@@ -530,7 +536,8 @@
                     withCredentials: true
                 },
                 data: {
-                    get_type: 'topic'
+                    get_type: 'topic',
+                    sortingorder: sort_by
                 },
                 success: function(response) 
                 {
@@ -607,6 +614,10 @@
             {
                 var topicID = externalID;    
             }
+
+
+            var sort_by = $('.sort_by').val();
+
             // let's find the posts 
             $.ajax({
                 type: "GET",
@@ -617,7 +628,7 @@
                 data: {
                     get_type: 'post',
                     topic_id: topicID,
-                    sort_order: sortingorder
+                    sortingorder: sort_by
                 },
                 success: function(response) 
                 {
@@ -632,7 +643,7 @@
                     }
                     $('.topicpathtext').empty();
 
-                    $('.topicpathtext').append('/<a href="" class="go_home loadtopics" title="Front Page"">front page</a>/&nbsp;&nbsp;&nbsp;&nbsp;');
+                    $('.topicpathtext').append('/<button class="go_home loadtopics" title="Front Page"">front page</button>/&nbsp;&nbsp;&nbsp;&nbsp;');
 
 
                     for (var i = 0; i < response.length; i++)
@@ -646,7 +657,7 @@
                             
                             $('.topicpathtext').empty();
         
-                            $('.topicpathtext').append('/<a href="" class="go_home loadtopics" title="Front Page" name="'+topicname+'">front page</a>/'+pathtopicname+'/&nbsp;&nbsp;&nbsp;&nbsp;');
+                            $('.topicpathtext').append('/<button class="go_home loadtopics" title="Front Page" name="'+topicname+'">front page</button>/'+pathtopicname+'/&nbsp;&nbsp;&nbsp;&nbsp;');
                 
                             // set topic name in title bar
                             $('.topictitle').text(topicname);
@@ -822,7 +833,7 @@
                     
 
                     var postinsert = '';
-                    var linkpost = "<a class='outlink' href='"+parentbody+"'>"+parentbody+"</a>";
+                    var linkpost = "<a title='WARNING: External links may contain malicious content.' class='outlink' href='"+parentbody+"' target='_BLANK'>"+parentbody+"</a>";
                     var imgpost = "<a href='./img.php?imid="+parentID+"' target='_BLANK'><img class='postimg' src='./img.php?imid="+parentID+"' alt='"+parenttitle+"' /></a>";
                     var textpost = makeValidString(parentbody);
 
@@ -869,7 +880,7 @@
                     
                     $('.topicpathtext').empty();
 
-                    $('.topicpathtext').append('/<a href="" class="go_home loadtopics" title="Front Page">front page</a>/<a href="" class="go_home loadposts" id="'+parenttopicID+'" title="'+parenttopicname+'">'+pathtoparenttopicname+'</a>/'+pathtopicname+'&nbsp;&nbsp;&nbsp;&nbsp;');
+                    $('.topicpathtext').append('/<button class="go_home loadtopics" title="Front Page">front page</button>/<button class="go_home loadposts loadpostsbutton" id="'+parenttopicID+'" title="'+parenttopicname+'">'+pathtoparenttopicname+'</button>/'+pathtopicname+'&nbsp;&nbsp;&nbsp;&nbsp;');
         
 
                     // ok lets get the replies

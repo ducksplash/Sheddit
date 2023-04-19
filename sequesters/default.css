@@ -1,8 +1,13 @@
+@font-face 
+{
+    font-family: DeJaVu;
+    src: url('./dejavu.ttf') format('truetype');
+}  
 body 
 {
     background-color: white;
     color: #606060;
-    font-family: "DejaVu Sans", sans-serif;
+    font-family: DeJaVu, sans-serif;
     font-size: 1.1vw;
     filter: saturate(100%);
 }
@@ -264,7 +269,6 @@ label {
     width: 12vw;
     font-size: 1.3vw;
     color: #404040;
-    padding: 0.4vw;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
@@ -281,8 +285,7 @@ label {
     background-color: #404040;
     resize: none;
     font-size: 1.3vw;
-    width: 12vw;    
-    padding: 0.4vw;
+    width: 12vw;   
     border: 0.1px solid #404040;
 }
 .postinput:hover {
@@ -786,4 +789,42 @@ select.postlimit:hover {
     margin-top: 10px;
     line-height: 20px;
     z-index: 2;
+}
+
+.loadtopics {
+    color: #ffffff;
+    background-color: rgba(0,0,0,0);
+    text-decoration-skip-ink: auto;
+    border: none;
+    font-family: DeJaVu, sans-serif;
+    padding-left: 0;
+    padding-right: 0;
+    font-weight: bold;
+    font-size: 1.2vw;
+    text-decoration: none;
+}
+.loadtopics:hover {
+    color: #00ff00;
+    border: none;
+    text-decoration: underline overline;
+    text-decoration-style:dotted;
+}
+
+.loadpostsbutton {
+    color: #ffffff;
+    background-color: rgba(0,0,0,0);
+    text-decoration-skip-ink: auto;
+    border: none;
+    font-family: DeJaVu, sans-serif;
+    padding-left: 0;
+    padding-right: 0;
+    font-weight: bold;
+    font-size: 1.2vw;
+    text-decoration: none;
+}
+.loadpostsbutton:hover {
+    color: #00ff00;
+    border: none;
+    text-decoration: underline overline;
+    text-decoration-style:dotted;
 }

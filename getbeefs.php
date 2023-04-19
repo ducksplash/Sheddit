@@ -20,6 +20,9 @@ $items_start = (isset($_GET['items_start'])) ? (int)$_GET['items_start'] : 0;
 // pass limit for pagination, if empty set 20
 $items_limit = (isset($_GET['items_limit'])) ? (int)$_GET['items_limit'] : 20;
 
+// pass sort order
+$sort_order = (isset($_GET['sortingorder'])) ? $_GET['sortingorder'] : 'reputation';
+
 //
 $search_query = (isset($_GET['search_query'])) ? make_valid_string($_GET['search_query']) : '';
 
@@ -83,9 +86,9 @@ if ($get_type === 'post')
     $topictitle = htmlspecialchars($topicrow['title'], ENT_QUOTES);
     
     // still need to finish query to add limit, start, sort...
-    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' ORDER BY reputation DESC";
+    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' ORDER BY ? DESC";
     $stmt = mysqli_prepare($database_connection, $query);
-    mysqli_stmt_bind_param($stmt, "i", $topic_id);
+    mysqli_stmt_bind_param($stmt, "is", $topic_id,$sort_order);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $stmt->close();
@@ -155,9 +158,9 @@ if ($get_type === 'thread')
     }
     else
     {
-        $threadquery = "SELECT * FROM items WHERE id=? AND lineage='post' ORDER BY date_created DESC LIMIT 1";
+        $threadquery = "SELECT * FROM items WHERE id=? AND lineage='post' ORDER BY ? DESC LIMIT 1";
         $stmt = mysqli_prepare($database_connection, $threadquery);
-        mysqli_stmt_bind_param($stmt, 'i', $post_id);
+        mysqli_stmt_bind_param($stmt, 'is', $post_id, $sort_order);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $stmt->close();
@@ -189,9 +192,9 @@ if ($get_type === 'thread')
 
         $replydata = [];
     
-        $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' ORDER BY reputation DESC";
+        $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' ORDER BY ? DESC";
         $stmt = mysqli_prepare($database_connection, $repliesquery);
-        mysqli_stmt_bind_param($stmt, 'i', $post_id);
+        mysqli_stmt_bind_param($stmt, 'is', $post_id,$sort_order);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $stmt->close();
