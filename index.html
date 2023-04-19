@@ -19,22 +19,6 @@
         <div class="topictitle">Topic Title i.e. 'Films'.</div>
         <div class="topicpath"><span class="topicpathtext"></span></div>
     </div>
-    <div class="buttonsrow">
-        
-    <select name="sort_by" class="sort_by postsort" id="sort_by">
-        <option disabled>-- Sort By --</option>
-        <option value="1">Sort By Rep</option>
-        <option value="0">Sort By New</option>
-    </select>
-        
-    <select name="post_limit" class="post_limit postlimit" id="post_limit">
-        <option value="20">20 Per Page</option>
-        <option value="50">50 Per Page</option>
-        <option value="100">100 Per Page</option>
-        <option value="200">200 Per Page</option>
-        <option value="500">500 Per Page</option>
-    </select>
-    </div>
     </div>
 
     <!-- / header panel -->
@@ -95,7 +79,6 @@
     <div class="displayingbody">
 
         
-
         <!-- loading screen -->
 
         <div class="loadingscreen">
@@ -103,8 +86,13 @@
             Please Wait
         </div>
         
-        <!-- /loading screen -->
 
+
+        <select name="sort_by" class="sort_by postsort" id="sort_by">
+            <option disabled>-- Sort By --</option>
+            <option value="reputation">Sort By Rep</option>
+            <option value="date_created">Sort By New</option>
+        </select>
 
 
         <!-- topics window -->

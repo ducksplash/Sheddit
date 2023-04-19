@@ -586,6 +586,13 @@
             loadposts(this, 0);
         });
 
+        $(document).on("change", ".sort_posts", function() 
+        {
+            loadposts(this, 0);
+        });
+
+        
+
         function loadposts(thing, externalID)
         {
             console.log('load posts');
@@ -597,6 +604,9 @@
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
             $('.loadingscreen').html('Fetching Content<br/>Please Wait');
+            $('.sort_by').addClass('sort_posts');
+            $('.sort_by').removeClass('sort_threads');
+
 
             // empty the demo content out of the topic window
             //
@@ -615,6 +625,8 @@
                 var topicID = externalID;    
             }
 
+            
+            $('.sort_by').attr('id',topicID);
 
             var sort_by = $('.sort_by').val();
 
@@ -743,6 +755,13 @@
 
         });
 
+        $(document).on("change", ".sort_threads", function() 
+        {
+
+            loadthreads(this, 0);
+
+        });
+
         function loadthreads(thingy, pid, tid, tname, externalID)
         {
             // set visible windows 
@@ -753,7 +772,8 @@
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
             $('.loadingscreen').html('Fetching Content<br/>Please Wait');
-
+            $('.sort_by').addClass('sort_threads');
+            $('.sort_by').removeClass('sort_posts');
             // empty the demo content out of the topic window
             //
 
@@ -775,6 +795,12 @@
                 var parenttopicID = tid;
             }
 
+
+            $('.sort_by').attr('id',postID);
+
+            var sort_by = $('.sort_by').val();
+
+
             // let's find the comments 
             $.ajax({
                 type: "GET",
@@ -784,7 +810,8 @@
                 },
                 data: {
                     get_type: 'thread',
-                    post_id: postID
+                    post_id: postID,
+                    sortingorder: sort_by
                 },
                 success: function(response) 
                 {
@@ -799,6 +826,7 @@
                     var parentownerID = response['ownerID'];
                     var parentID = response['id'];
                     var parenttitle = response['threadtitle'];
+                    var parenttopicname = response['threadtopicname'];
                     var parentbody = response['threadbody'];
                     var parenttype = parseInt(response['threadtype']);
                     var parentreputation = response['reputation'];

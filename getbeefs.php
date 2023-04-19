@@ -23,6 +23,7 @@ $items_limit = (isset($_GET['items_limit'])) ? (int)$_GET['items_limit'] : 20;
 // pass sort order
 $sort_order = (isset($_GET['sortingorder'])) ? $_GET['sortingorder'] : 'reputation';
 
+
 //
 $search_query = (isset($_GET['search_query'])) ? make_valid_string($_GET['search_query']) : '';
 
@@ -86,9 +87,15 @@ if ($get_type === 'post')
     $topictitle = htmlspecialchars($topicrow['title'], ENT_QUOTES);
     
     // still need to finish query to add limit, start, sort...
-    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' ORDER BY ? DESC";
+    $allowed_sort_orders = array('reputation', 'date_created');
+    if (in_array($sort_order, $allowed_sort_orders)) {
+        $order_by = "ORDER BY $sort_order DESC";
+    } else {
+        $order_by = "ORDER BY date_created DESC"; // default sort order
+    }
+    $query = "SELECT * FROM items WHERE tid=? AND lineage='post' $order_by";
     $stmt = mysqli_prepare($database_connection, $query);
-    mysqli_stmt_bind_param($stmt, "is", $topic_id,$sort_order);
+    mysqli_stmt_bind_param($stmt, "i", $topic_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $stmt->close();
@@ -166,12 +173,27 @@ if ($get_type === 'thread')
         $stmt->close();
         $threadrow = mysqli_fetch_assoc($result);
     
+        
+        // try to get topic name and pass it in a var
+        $topicquery = "SELECT * FROM topics WHERE id=? LIMIT 1";
+        $topicstmt = mysqli_prepare($database_connection, $topicquery);
+        mysqli_stmt_bind_param($topicstmt, "i", $threadrow['tid']);
+        mysqli_stmt_execute($topicstmt);
+        $topicresult = mysqli_stmt_get_result($topicstmt);
+        $topicrow = mysqli_fetch_assoc($topicresult);
+        $topicstmt->close();
+
+        $topictitle = htmlspecialchars($topicrow['title'], ENT_QUOTES);
+
+
+
         $ownerID = $threadrow['ownerID'];
         $data['id'] = $threadrow['id'];
         $data['deleted'] = ($threadrow['date_deleted'] === '0000-00-00 00:00:00') ? 'false' : 'true';
         $data['threadtitle'] = ($data['deleted'] === 'false') ? htmlspecialchars($threadrow['title'], ENT_QUOTES, 'UTF-8') : 'Deleted';
         $data['threadbody'] = ($data['deleted'] === 'false') ? nl2br(htmlspecialchars($threadrow['body'], ENT_QUOTES, 'UTF-8')) : 'Deleted';
         $data['threadtype'] = $threadrow['item_type'];
+        $data['threadtopicname'] = $topictitle;
         $data['threadusername'] = $threadrow['username'];
         // $data['threaduserlevel'] = $threadrow['userlevel'];
         $data['extension'] = $threadrow['extension'];
@@ -191,17 +213,27 @@ if ($get_type === 'thread')
 
 
         $replydata = [];
-    
-        $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' ORDER BY ? DESC";
+
+        
+
+        $allowed_sort_orders = array('reputation', 'date_created');
+        if (in_array($sort_order, $allowed_sort_orders)) {
+            $order_by = "ORDER BY $sort_order DESC";
+        } else {
+            $order_by = "ORDER BY date_created DESC"; // default sort order
+        }
+
+
+        $repliesquery = "SELECT * FROM items WHERE pid=? AND lineage='reply' $order_by";
         $stmt = mysqli_prepare($database_connection, $repliesquery);
-        mysqli_stmt_bind_param($stmt, 'is', $post_id,$sort_order);
+        mysqli_stmt_bind_param($stmt, 'i', $post_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $stmt->close();
 
+
         while ($row = mysqli_fetch_assoc($result)) 
         {
-
 
             $zquery = "SELECT userlevel FROM users WHERE id=?";
             $zstmt = mysqli_prepare($database_connection, $zquery);

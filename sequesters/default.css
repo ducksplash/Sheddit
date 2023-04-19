@@ -75,9 +75,10 @@ a.outlink:hover {
     font-size: 1.2vw;
 }
 .buttonsrow {
-    width: 40vw;
-    float: right;
+    background-color: rgba(0,0,0,0);
+    width: 10vw;
     text-align: right;
+    float: right;
 }
 
 .pagefooter {
@@ -314,8 +315,10 @@ select.postinput:hover {
 select.postsort {
     font-size: 1.2vw;
     color: #404040;
+    display: inline;
+    float: right;
     padding: 0.5vw;
-    background-color: #ffffff;
+    background-color: rgba(0,0,0,0);
     border: 0.1px solid #404040;
 }
 select.postlimit {
