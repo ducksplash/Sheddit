@@ -16,11 +16,8 @@
         var sortingorder = 'reputation';
         
 
-
         if (!initialised)
         {
-            load_topics();
-        
             $.ajax({
                 type: "GET",
                 url: "./innitdoe.php", 
@@ -48,7 +45,6 @@
                 },
                 success: function(response) 
                 {
-                    console.log(response);
                     if (response != "false")
                     {
                         var resource = JSON.parse(response);
@@ -56,19 +52,19 @@
 
                         if (resource['userlevel'] == -1)
                         {
-                            membertype = '<br/>(<span style="color: #CC0000;">Banned</span>)';
+                            membertype = '<br/>(<span class="bannedcolour">Banned</span>)';
                         }
                         else if (resource['userlevel'] == 1)
                         {
-                            membertype = '<br/>(<span style="color: #00CC00;">Moderator</span>)';
+                            membertype = '<br/>(<span class="modcolour">Moderator</span>)';
                         }
                         else if (resource['userlevel'] == 2)
                         {
-                            membertype = '<br/>(<span style="color: #0000CC;">Admin</span>)';
+                            membertype = '<br/>(<span class="admincolour">Admin</span>)';
                         }
                         else
                         {
-                            membertype = '';    
+                            membertype = '<br/>(<span class="usercolour">Member</span>)';
                         }
 
                         // switch out panel
@@ -84,7 +80,48 @@
 
             initialised = true;
         }
+
+                
         
+        // Get the URL path
+        var path = window.location.pathname;
+        // Split the path into an array of segments using the slash (/) as a delimiter
+        var segments = path.split('/');
+        // Get the topic and thread parameters from the segments array
+        var get_topic = segments[1];
+        var get_thread = segments[2];
+
+        if (get_topic > 0 && get_thread > 0)
+        {
+            console.log('<for seo urls> get thread:'+get_thread);
+            
+            load_topics();
+            setTimeout(function() {
+              loadthreads(this, get_thread, get_topic, 'thread');
+            }, 500);
+            
+        }
+        else if (get_topic > 0)
+        {
+            console.log('<for seo urls> get topic:'+get_topic);  
+            
+            // take user straight to topic
+            load_topics();
+            
+
+            setTimeout(function() {
+                loadposts(this, get_topic);
+              }, 500);
+        }
+        else
+        {
+            load_topics();
+        }
+
+
+
+
+
         $(document).ready(function()
         {
 
@@ -458,6 +495,7 @@
         function load_topics()
         {
 
+            console.log('load topics 463');
 
             // set visible windows 
             // this is the 'topics' function so we want topics visible and thread/posts hidden
@@ -538,11 +576,12 @@
 
         $(document).on("click", ".loadposts", function() 
         {
-            loadposts(this);
+            loadposts(this, 0);
         });
 
-        function loadposts(thing)
+        function loadposts(thing, externalID)
         {
+            console.log('load posts');
             // set visible windows 
             // this is the 'posts' function so we want posts visible and thread/topics hidden
 
@@ -560,8 +599,14 @@
             // get topic id and topic name
             // getting topic name here seems shonky
             // must try something else
-            var topicID = thing.id;
-
+            if (externalID == 0)
+            {
+                var topicID = thing.id;
+            }
+            else
+            {
+                var topicID = externalID;    
+            }
             // let's find the posts 
             $.ajax({
                 type: "GET",
@@ -581,13 +626,13 @@
 
                     if (response.length == 0)
                     {
-                        console.log('non');
-                        $('.loadingscreen').css('display', 'block');
-                        $('.loadingscreen').text('No posts here.');
+                        // $('.loadingscreen').css('display', 'block');
+                        // $('.loadingscreen').text('No posts here.');
+                        load_topics();
                     }
                     $('.topicpathtext').empty();
 
-                    $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page"">front page</a>/&nbsp;&nbsp;&nbsp;&nbsp;');
+                    $('.topicpathtext').append('/<a href="" class="go_home loadtopics" title="Front Page"">front page</a>/&nbsp;&nbsp;&nbsp;&nbsp;');
 
 
                     for (var i = 0; i < response.length; i++)
@@ -601,7 +646,7 @@
                             
                             $('.topicpathtext').empty();
         
-                            $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page" name="'+topicname+'">front page</a>/'+pathtopicname+'/&nbsp;&nbsp;&nbsp;&nbsp;');
+                            $('.topicpathtext').append('/<a href="" class="go_home loadtopics" title="Front Page" name="'+topicname+'">front page</a>/'+pathtopicname+'/&nbsp;&nbsp;&nbsp;&nbsp;');
                 
                             // set topic name in title bar
                             $('.topictitle').text(topicname);
@@ -621,19 +666,19 @@
                         var membername = '';
                         if (postuserlevel == -1)
                         {
-                            membername = '<span style="color: #CC0000;">'+postusername+'</span>';
+                            membername = '<span class="bannedcolour">'+postusername+'</span>';
                         }
                         else if (postuserlevel == 1)
                         {
-                            membername = '<span style="color: #00CC00;">'+postusername+'</span>';
+                            membername = '<span class="modcolour">'+postusername+'</span>';
                         }
                         else if (postuserlevel == 2)
                         {
-                            membername = '<span style="color: #0000CC;">'+postusername+'</span>';
+                            membername = '<span class="admincolour">'+postusername+'</span>';
                         }
                         else
                         {
-                            membername = '<span style="color: #404040;">'+postusername+'</span>';
+                            membername = '<span class="usercolour">'+postusername+'</span>';
                         }
                         
                         
@@ -667,7 +712,7 @@
                                 </div>\n\
                                 <div class="postslabinner">\n\
                                 <div class="postlinktitle" id="'+topicID+'"><button class="topicbutton loadcomments" id="'+postID+'" name="'+topicname+'">'+posttitle+'</button>\n\
-                                <br/><sup>'+membername+'</sup></div>\n\
+                                <br/><sub>by '+membername+'</sub></div>\n\
                                 <div>'+postinsert+'</div>\n\
                                 </div>\n\
                             </div>\n\
@@ -683,11 +728,11 @@
         $(document).on("click", ".loadcomments", function() 
         {
 
-            loadthreads(this);
+            loadthreads(this, 0);
 
         });
 
-        function loadthreads(thingy, pid, tid, tname)
+        function loadthreads(thingy, pid, tid, tname, externalID)
         {
             // set visible windows 
             // this is the 'threads' function so we want threads visible and topics/posts hidden
@@ -737,13 +782,6 @@
                     $('.threadwindow').css('display', 'block');
 
 
-                    if (response.length == 0)
-                    {
-                        console.log('non');
-                        $('.loadingscreen').css('display', 'block');
-                        $('.loadingscreen').text('No posts here.');
-                    }
-
                     // get main comment first
 
                     var parentowner = response['threadusername'];
@@ -757,6 +795,10 @@
                     var parentmodified = response['date_modified'];
                     var userlevel = response['userlevel'];
 
+                    if (!parentID)
+                    {
+                        loadposts(this, parenttopicID);
+                    }
                     
                         
                     var membername = '';
@@ -827,7 +869,7 @@
                     
                     $('.topicpathtext').empty();
 
-                    $('.topicpathtext').append('/<a href="#" class="go_home loadtopics" title="Front Page">front page</a>/<a href="#" class="go_home loadposts" id="'+parenttopicID+'" title="'+parenttopicname+'">'+pathtoparenttopicname+'</a>/'+pathtopicname+'&nbsp;&nbsp;&nbsp;&nbsp;');
+                    $('.topicpathtext').append('/<a href="" class="go_home loadtopics" title="Front Page">front page</a>/<a href="" class="go_home loadposts" id="'+parenttopicID+'" title="'+parenttopicname+'">'+pathtoparenttopicname+'</a>/'+pathtopicname+'&nbsp;&nbsp;&nbsp;&nbsp;');
         
 
                     // ok lets get the replies
@@ -913,7 +955,6 @@
             var submitButton = $("<button>").text("Add Reply").addClass("modalbutton").on("click", function() {
                 // Close the modal when the OK button is clicked
 
-                console.log($('.reply_input').val());
 
                 var replystring = $('.reply_input').val();
 
@@ -974,9 +1015,6 @@
             {
 
                 var postID = this.id;
-                
-                console.log('do rep up '+postID);
-
 
                 $.ajax({
                     type: "GET",
@@ -990,9 +1028,7 @@
                     },
                     success: function(response) 
                     {
-                        console.log(response);
                         $(".doot_"+postID).text(response);
-
                     }
                 });
 
@@ -1000,10 +1036,8 @@
 
             $(document).on("click", ".repdown", function() 
             {
-
                 var postID = this.id;
                 
-                console.log('do repdown '+postID);
                 $.ajax({
                     type: "GET",
                     url: "./reps.php", 
@@ -1016,7 +1050,6 @@
                     },
                     success: function(response) 
                     {
-                        console.log(response);
                         $(".doot_"+postID).text(response);
                     }
                 });
@@ -1198,16 +1231,13 @@
                         if (response == 'false')
                         {
 
-                            console.log('fail');                            
                             $('.signupstatus').text("Error: Account could not be created as username may already exist.").css("color", "#ff0000");
 
                         }
                         else
                         {
                             
-                            console.log('go');                                       
                             $('.signupstatus').text("Account created, you may now log in.").css("color", "#00ff00");
-
                             $('.userregstatus').text("");
                             $('.passregstatus').text(""); 
                             $('.passregrepeatstatus').text(""); 
@@ -1350,8 +1380,12 @@
                 success: function(response) 
                 {
                     console.log('response: '+response);
+
+                    load_topics();
+
                 }
             });
 
 
         }
+

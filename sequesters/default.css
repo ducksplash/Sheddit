@@ -264,6 +264,7 @@ label {
     width: 12vw;
     font-size: 1.3vw;
     color: #404040;
+    padding: 0.4vw;
     background-color: #ffffff;
     border: 0.1px solid #404040;
 }
@@ -280,7 +281,8 @@ label {
     background-color: #404040;
     resize: none;
     font-size: 1.3vw;
-    width: 12vw;
+    width: 12vw;    
+    padding: 0.4vw;
     border: 0.1px solid #404040;
 }
 .postinput:hover {
@@ -643,6 +645,18 @@ select.postlimit:hover {
     top: -10px;
 }
 
+.usercolour {
+    color: #404040;
+}
+.admincolour {
+    color: #0000CC;
+}
+.modcolour {
+    color: #00CC00;
+}
+.bannedcolour {
+    color: #CC0000;
+}
 
 /* ===== Scrollbar CSS ===== */
   /* Firefox */

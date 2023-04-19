@@ -1,11 +1,11 @@
 <?php
 require_once('./database_connection.php');
+include('./lc.php');
 
 $item_id = isset($_GET['item_id']) ? intval($_GET['item_id']) : 0;
 $rep = isset($_GET['rep_value']) ? $_GET['rep_value'] : 'down';
 
 $rep_val = $rep === 'up' ? 'up' : 'down';
-$ownerID = 1;
 
 // Get reputation of item
 $q_rep_start = "SELECT reputation FROM items WHERE id = ? LIMIT 1";

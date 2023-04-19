@@ -27,7 +27,13 @@ if (!is_null($imgbody))
 }
 else
 {
-    // create a new 250x150 image
+    // create an image to specify a broken/deleted image
+
+    $error_message = 'Image Deleted'; // text to display on image
+    $font_size = 20; // font size
+
+
+
     $image = imagecreatetruecolor(250, 150);
 
     // allocate white color
@@ -46,8 +52,7 @@ else
     imagerectangle($image, 2, 2, 247, 147, $black);
 
     // set font size and calculate the text box size
-    $font_size = 20;
-    $text_box = imagettfbbox($font_size, 0, $font_file, 'Image Deleted');
+    $text_box = imagettfbbox($font_size, 0, $font_file, $error_message);
 
     // calculate the position to center the text
     $text_width = $text_box[2] - $text_box[0];
@@ -56,20 +61,19 @@ else
     $y = (150 - $text_height) / 2 + $font_size;
 
     // write the text centered in the rectangle
-    imagettftext($image, $font_size, 0, $x, $y, $black, $font_file, 'Image Deleted');
+    imagettftext($image, $font_size, 0, $x, $y, $black, $font_file, $error_message);
 
     // set the content type header to output as image
+
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+    header("Pragma: no-cache");
     header('Content-Type: image/png');
 
-    // output the image to the browser
+    // serve the image
     imagepng($image);
 
-    // free up memory
-    imagedestroy($image);
-
-    
-}
-
-
-    
+    // clean up by removing image data from ram
+    imagedestroy($image);   
+}  
 ?>
