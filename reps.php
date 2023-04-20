@@ -2,6 +2,7 @@
 require_once('./database_connection.php');
 include('./lc.php');
 
+
 $item_id = isset($_GET['item_id']) ? intval($_GET['item_id']) : 0;
 $rep = isset($_GET['rep_value']) ? $_GET['rep_value'] : 'down';
 
@@ -37,29 +38,36 @@ if ($countreps < 1) {
     $stmtx->close();
     
     
-    if ($my_current_rep === 'up') 
+    if ($loggedin)
     {
-        if ($rep === 'down') 
+    
+        if ($my_current_rep === 'up') 
         {
-            $new_rep_value = $row_rep_start['reputation'] - 2;
-        } 
+            if ($rep === 'down') 
+            {
+                $new_rep_value = $row_rep_start['reputation'] - 2;
+            } 
+            else
+            {
+                $new_rep_value = $row_rep_start['reputation'];
+            }
+        }
         else
         {
-            $new_rep_value = $row_rep_start['reputation'];
+            if ($rep === 'up') 
+            {
+                $new_rep_value = $row_rep_start['reputation'] + 2; // Changed from +1 to +2
+            } 
+            else 
+            {
+                $new_rep_value = $row_rep_start['reputation'];
+            }
         }
     }
     else
     {
-        if ($rep === 'up') 
-        {
-            $new_rep_value = $row_rep_start['reputation'] + 2; // Changed from +1 to +2
-        } 
-        else 
-        {
-            $new_rep_value = $row_rep_start['reputation'];
-        }
+        $new_rep_value = $row_rep_start['reputation'];
     }
-    
 }
 
 // Update item reputation in database and print new rep value
@@ -69,4 +77,6 @@ $stmty->execute();
 $stmty->close();
 $database_connection->close();
 print($new_rep_value);
+
+
 ?>

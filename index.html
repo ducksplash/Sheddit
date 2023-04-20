@@ -27,52 +27,7 @@
     <!-- main page body -->
     <div class="pageparent">
 
-    <!-- posting body -->
-	<div class="postingbody">
-
-    <div style="font-size: 1.2vw; color: #404040; text-align: center; font-weight: bold;">Create New<br/>Thread</div><br/>
-
-    <label for="title_input">Title</label><br/>
-    <input id="title_input" type="text" placeholder="title" maxlength="1000" class="postinput"/><br/>
-    <span class="charsleft charsleft_title">100</span>
-    <br/>
-    <br/>
-    <label for="post_type">Post Type</label><br/>
-    <select name="post_type" class="post_type postinput" id="post_type">
-        <option disabled>-- Select Post Type --</option>
-        <option value="0">Text</option>
-        <option value="1">Link</option>
-        <option value="2">Image</option>
-    </select>
-    <br/>
-    <br/>
-    <label for="post_topic">Select Topic</label><br/>
-    <select name="post_topic" class="post_topic postinput" id="post_topic">
-        <option disabled>-- Select Topic --</option>
-        <!-- set by function: -->
-    </select>
-    <br/>
-    <br/>
-
-    <!-- post type (dynamic area) -->
-
-    <span id="post_window">
-
-    <label for="body_input">Body</label><br/>
-    <textarea id="body_input" class="postinputtextarea body_input" placeholder="some text"></textarea><br/>
-    <span class="charsleft charsleft_body">1000</span>
-    
-    </span>
-    <!-- /post type -->
-    <br/>
-    <br/>
-	<button id="send_button" class="sendbutton" style="float: left;" disabled>Send</button>
-    <br/><br/>
-    <span><span id="resso" style="float: left;"></span></span>
-    </div>
-
-    <!-- end posting body-->
-    
+   
 
     <!-- displaying body -->
 
@@ -86,7 +41,7 @@
             Please Wait
         </div>
         
-
+        <button id="create_thread_button" class="create_thread_button createnewthread">Create Thread</button>
 
         <select name="sort_by" class="sort_by postsort" id="sort_by">
             <option disabled>-- Sort By --</option>
@@ -98,7 +53,7 @@
         <!-- topics window -->
         <div id="topic_window" class="topicwindow">
         <!-- these get added by script 'loadtopics()'-->
-                
+                 
         </div>
 
 
@@ -156,6 +111,7 @@
 
 
         </div>
+        <hr style="color: #404040; border: 0.1px solid #909090; padding: 0.3px;"/>
         <!-- /account -->
         
         <!-- / right side panel -->

@@ -215,7 +215,7 @@
                 "<input type=\"file\" name=\"file_input\" class=\"postinput file_input\" id=\"file_input\"/><br/>"+
                 "<span class=\"charsleft\">Max Filesize 5MB</span>";
                 
-                var targetSpan = $("#post_window");
+                var targetSpan = $(".post_window"); //
 
                 // Empty the post_window
                 targetSpan.empty();
@@ -263,7 +263,7 @@
 
         
         // check title
-        $("#title_input").on("input", function() 
+        $(document).on("input", ".title_input", function() 
         {
             
         var title = $(this).val();
@@ -1428,3 +1428,132 @@
 
         }
 
+
+
+
+        
+
+        $(document).on("click", ".createnewthread", function() 
+        {
+            // Create a modal
+            var modal = $("<div>").addClass("newthreadmodal");
+            
+            // Create a cancel button
+            var cancelButton = $("<button>").text("Cancel").addClass("modalbutton").on("click", function() {
+                // Close the modal when the OK button is clicked
+                modal.remove();
+                $(".overlay").remove();
+            });
+
+            var topicName = $('.topictitle').text();
+            var topicID = this.name;
+            var threadID = this.id;
+
+            // Create a submit button
+            var submitButton = $("<button>").text("Add Reply").addClass("modalbutton").on("click", function() {
+                // Close the modal when the OK button is clicked
+
+
+                var replystring = $('.reply_input').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "./backwash.php", 
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {
+                        post_topic: topicID,
+                        post_body: replystring,
+                        post_ID: threadID
+                    },
+                    dataType: "json",
+                    success: function(response)
+                    {
+    
+                        reset_form();
+                        loadthreads(this,threadID,topicID,topicName);
+    
+                    
+                    },
+                    error: function(xhr, status, error)
+                    {
+                        reset_form();
+                    }
+                    });
+
+
+                modal.remove();
+                $(".overlay").remove();
+            });
+            
+
+
+            // Add things
+            modal.append('<div style="font-size: 1.2vw; color: #404040; text-align: center; font-weight: bold;">Create New<br/>Thread</div><br/>\n\
+            <label for="title_input">Title</label><br/>\n\
+            <input id="title_input" type="text" placeholder="title" maxlength="1000" class="postinput title_input"/><br/>\n\
+            <span class="charsleft charsleft_title">100</span>\n\
+            <br/>\n\
+            <br/>\n\
+            <label for="post_type">Post Type</label><br/>\n\
+            <span id="posttypeselect"></span>\n\
+            <br/>\n\
+            <br/>\n\
+            <span class="post_window">\n\
+            <label for="body_input">Body</label><br/>\n\
+            <textarea id="body_input" class="postinputtextarea body_input" placeholder="some text"></textarea><br/>\n\
+            <span class="charsleft charsleft_body">1000</span>\n\
+            </span>\n\
+            <br/>\n\
+            <br/>\n\
+            <button id="send_button" class="sendbutton" style="float: left;" disabled>Send</button>\n\
+            <br/><br/>\n\
+            <span><span id="resso" style="float: left;"></span></span>');
+
+
+            // create the select element
+            var $select = $('<select>');
+
+            // add options to the select element
+            $select.append($('<option>', { 
+                value: '0',
+                text: 'Text Post'
+            }));
+
+            $select.append($('<option>', { 
+                value: '1',
+                text: 'Link Post'
+            }));
+
+            $select.append($('<option>', { 
+                value: '2',
+                text: 'Image Post'
+            }));
+
+            $select.attr("id","post_type");
+            $select.addClass("postinput");
+
+            // attach the onchange event handler using .on() method
+            $select.on('change', function() 
+            {
+                select_post_type();
+            });
+
+            
+            
+            modal.append(cancelButton);
+            modal.append(submitButton);
+            
+            
+            // Add an overlay to the website
+            var overlay = $("<div>").addClass("overlay").addClass("modaloverlay");
+            
+            // Add the modal and overlay to the website
+            $("body").append(overlay).append(modal);
+
+            $("#posttypeselect").append($select);
+
+        });
+          
+          

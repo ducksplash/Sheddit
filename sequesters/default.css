@@ -397,6 +397,29 @@ select.postlimit:hover {
 
 
 
+
+.create_thread_button {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 0.5vw;
+}
+.create_thread_button:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.create_thread_button:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
+}
+
+
+
 .postwindow {
     height: 70vh;
     width: 40vw;
@@ -511,6 +534,19 @@ select.postlimit:hover {
 }
 
 .replymodal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30vw;
+    text-align: center;
+    background-color: white;
+    border: 0.1px solid black;
+    opacity: 100%;
+    z-index: 9999;
+}
+
+.newthreadmodal {
     position: fixed;
     top: 50%;
     left: 50%;
