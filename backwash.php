@@ -155,6 +155,12 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
                   if ($postlineage === 'reply')
                   {
                     return $dbc->insert_id;
+
+                    $update_topic_lastpost = $dbc->prepare("UPDATE topics SET date_lastpost = NOW() WHERE id = ?");
+                    $update_topic_lastpost->bind_param("i", $tid);
+                    $update_topic_lastpost->execute();
+                    $update_topic_lastpost->close();
+
                   }
                   else
                   {
@@ -255,6 +261,12 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
     
                 // Execute the statement
                 if (mysqli_stmt_execute($stmt)) {
+                    
+                    $update_topic_lastpost = $dbc->prepare("UPDATE topics SET date_lastpost = NOW() WHERE id = ?");
+                    $update_topic_lastpost->bind_param("i", $tid);
+                    $update_topic_lastpost->execute();
+                    $update_topic_lastpost->close();
+
                     return "File Saved";
                 } else {
                     return "An Error Occured [1]";
@@ -321,6 +333,12 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
               // Execute the prepared statement
               if (mysqli_stmt_execute($stmt)) 
               {
+                
+                    $update_topic_lastpost = $dbc->prepare("UPDATE topics SET date_lastpost = NOW() WHERE id = ?");
+                    $update_topic_lastpost->bind_param("i", $tid);
+                    $update_topic_lastpost->execute();
+                    $update_topic_lastpost->close();
+                    
                   return "Link Saved";
               } 
               else 

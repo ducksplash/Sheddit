@@ -9,7 +9,6 @@ body
     color: #606060;
     font-family: DeJaVu, sans-serif;
     font-size: 1.1vw;
-    filter: saturate(100%);
 }
 a {
     color: #ffffff;
@@ -412,6 +411,28 @@ select.postlimit:hover {
     color: #ffffff;
 }
 .create_thread_button:disabled {
+    background-color: #c0c0c0;
+    color: #efefef;
+    font-weight: semi-bold;
+    text-decoration: none;
+}
+
+
+
+.create_topic_button {
+    background-color: #FFFFFF;
+    color: #404040;
+    font-size: 1.2vw;
+    font-weight: semi-bold;
+    text-decoration: none;
+    border: 0.1px solid #606060;
+    padding: 0.5vw;
+}
+.create_topic_button:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+.create_topic_button:disabled {
     background-color: #c0c0c0;
     color: #efefef;
     font-weight: semi-bold;

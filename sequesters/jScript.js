@@ -121,12 +121,7 @@
 
 
 
-
-
-        $(document).ready(function()
-        {
-
-            $("#send_button").click(function()
+            $(document).on("click", ".send_button", function() 
             {
                 // onSend set status to 'sending'
 
@@ -189,7 +184,7 @@
                 });
 
             });
-        });
+        
 
 
             
@@ -477,11 +472,11 @@
 
             if (title_ready && post_ready)
             {
-                $("#send_button").prop("disabled", false);
+                $(".send_button").prop("disabled", false);
             }
             else
             {
-                $("#send_button").prop("disabled", true);
+                $(".send_button").prop("disabled", true);
             }
 
 
@@ -507,6 +502,11 @@
             $('.loadingscreen').css('display', 'block');
             $('.loadingscreen').html('Fetching Content<br/>Please Wait');
 
+            
+            $('.sort_by').css('display','none');
+            $('.create_thread_button').css('display','none');
+            $('.create_topic_button').css('display','none');
+
             // empty the demo content out of the topic window
 
             $('.topicwindow').empty();
@@ -518,9 +518,6 @@
 
             // set title in header strip
             $('.topictitle').text("Home");
-
-            // empty topic list
-            $('.post_topic').empty();
 
             // get sort order
             var sort_by = $('.sort_by').val();
@@ -604,8 +601,13 @@
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
             $('.loadingscreen').html('Fetching Content<br/>Please Wait');
+
             $('.sort_by').addClass('sort_posts');
             $('.sort_by').removeClass('sort_threads');
+
+            $('.sort_by').css('display','inline');            
+            $('.create_thread_button').css('display','inline');
+            $('.create_topic_button').css('display','none');
 
 
             // empty the demo content out of the topic window
@@ -627,6 +629,7 @@
 
             
             $('.sort_by').attr('id',topicID);
+            $('.create_thread_button').attr('id',topicID);
 
             var sort_by = $('.sort_by').val();
 
@@ -649,9 +652,9 @@
 
                     if (response.length == 0)
                     {
-                        // $('.loadingscreen').css('display', 'block');
-                        // $('.loadingscreen').text('No posts here.');
-                        load_topics();
+                        $('.loadingscreen').css('display', 'block');
+                        $('.loadingscreen').text('No posts here.');
+                        //load_topics();
                     }
                     $('.topicpathtext').empty();
 
@@ -774,6 +777,12 @@
             $('.loadingscreen').html('Fetching Content<br/>Please Wait');
             $('.sort_by').addClass('sort_threads');
             $('.sort_by').removeClass('sort_posts');
+            
+
+            $('.create_thread_button').css('display','none');
+
+            $('.create_topic_button').css('display','none');
+
             // empty the demo content out of the topic window
             //
 
@@ -927,7 +936,6 @@
                         var replyreputation = response['replies'][i]['reputation'];
                         var replydatecreated = response['replies'][i]['date_created'];
                         var replydatemodified = response['replies'][i]['date_modified'];
-                        
                         var userlevel = response['replies'][i]['userlevel'];
 
                     
@@ -967,10 +975,8 @@
                         <button title="Delete" class="deletebutton deleteitem" id="'+replyID+'">Delete</button>\n\
                         </div></div>');  
                     }
-
                 }
             });
-
         }
 
 
@@ -1520,7 +1526,7 @@
             </span>\n\
             <br/>\n\
             <br/>\n\
-            <button id="send_button" class="sendbutton" style="float: left;" disabled>Send</button>\n\
+            <button id="send_button" class="send_button sendbutton" style="float: left;" disabled>Send</button>\n\
             <br/><br/>\n\
             <span><span id="resso" style="float: left;"></span></span>');
 
