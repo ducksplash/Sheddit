@@ -974,6 +974,19 @@
         }
 
 
+    
+
+        $(document).on("click", ".modaloverlay", function() 
+        {
+
+            $(".newthreadmodal").remove();
+            $(".registermodal").remove();
+            $(".replymodal").remove();
+            $(".overlay").remove();
+
+        });
+
+
         $(document).on("click", ".normalreply", function() 
         {
             // Create a modal
