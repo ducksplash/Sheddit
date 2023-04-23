@@ -96,6 +96,8 @@
             console.log('<for seo urls> get thread:'+get_thread);
             
             load_topics();
+
+
             setTimeout(function() 
             {
               loadthreads(this, get_thread, get_topic, 'thread');
@@ -110,7 +112,8 @@
             load_topics();
             
 
-            setTimeout(function() {
+            setTimeout(function() 
+            {
                 loadposts(this, get_topic);
               }, 500);
         }
@@ -120,71 +123,6 @@
         }
 
 
-
-            $(document).on("click", ".send_button", function() 
-            {
-                // onSend set status to 'sending'
-
-                $("#resso").text("sending...");
-                
-                var post_type = $("#post_type").val();
-
-                var title_string = $("#title_input").val();
-                var body_string = $(".body_input").val();
-                var link_string = $(".link_input").val();
-                var topic_id = $("#post_topic").val();
-
-                if (post_type == 2)
-                {
-                    var base64String = file_b64_body ? file_b64_body : '';
-                }
-                else
-                {
-                    var base64String = '';
-                }
-
-                
-                $.ajax({
-                type: "POST",
-                url: "./backwash.php", 
-                xhrFields: {
-                    withCredentials: true
-                },
-                data: {
-                    post_type: post_type,
-                    post_title: title_string,
-                    post_topic: topic_id,
-                    post_body: body_string,
-                    post_link: link_string,
-                    file_body: base64String,
-                },
-                dataType: "json",
-                success: function(response)
-                {
-
-                    if(response.status == 200)
-                    {
-                        $("#resso").text(makeValidString(response));
-                    }
-                        else 
-                    {
-                        $("#resso").text(makeValidString(response));
-                    }
-
-                    reset_form();
-                    load_topics();
-
-                
-                },
-                error: function(xhr, status, error)
-                {
-                    $("#resso").text(error);
-                    reset_form();
-                }
-                });
-
-            });
-        
 
 
             
@@ -472,11 +410,11 @@
 
             if (title_ready && post_ready)
             {
-                $(".send_button").prop("disabled", false);
+                $(".sendbutton").prop("disabled", false);
             }
             else
             {
-                $(".send_button").prop("disabled", true);
+                $(".sendbutton").prop("disabled", true);
             }
 
 
@@ -627,6 +565,8 @@
                 var topicID = externalID;    
             }
 
+            history.pushState({topic: topicID}, "", "./" + topicID);
+
             
             $('.sort_by').attr('id',topicID);
             $('.create_thread_button').attr('id',topicID);
@@ -775,12 +715,12 @@
             $('.topicwindow').css('display', 'none');
             $('.loadingscreen').css('display', 'block');
             $('.loadingscreen').html('Fetching Content<br/>Please Wait');
+            $('.sort_by').css('display','inline');           
             $('.sort_by').addClass('sort_threads');
             $('.sort_by').removeClass('sort_posts');
             
 
             $('.create_thread_button').css('display','none');
-
             $('.create_topic_button').css('display','none');
 
             // empty the demo content out of the topic window
@@ -803,6 +743,10 @@
                 var parenttopicname = tname;
                 var parenttopicID = tid;
             }
+
+            history.pushState({topic: parenttopicID, thread: postID}, "", "./" + parenttopicID + "/" + postID);
+
+            console.log('load posts 1211');
 
 
             $('.sort_by').attr('id',postID);
@@ -1457,6 +1401,9 @@
             // Create a modal
             var modal = $("<div>").addClass("newthreadmodal");
             
+            var topicID = this.id;
+
+
             // Create a cancel button
             var cancelButton = $("<button>").text("Cancel").addClass("modalbutton").on("click", function() {
                 // Close the modal when the OK button is clicked
@@ -1465,42 +1412,71 @@
             });
 
             var topicName = $('.topictitle').text();
-            var topicID = this.name;
-            var threadID = this.id;
+
 
             // Create a submit button
-            var submitButton = $("<button>").text("Add Reply").addClass("modalbutton").on("click", function() {
+            var submitButton = $("<button>").text("Add Post").addClass("modalbutton").on("click", function() {
                 // Close the modal when the OK button is clicked
 
 
-                var replystring = $('.reply_input').val();
+                $("#resso").text("sending...");
+                
+                var post_type = $("#post_type").val();
+
+                var title_string = $("#title_input").val();
+                var body_string = $(".body_input").val();
+                var link_string = $(".link_input").val();
+
+                console.log('topic id: '+topicID);            
+
+                if (post_type == 2)
+                {
+                    var base64String = file_b64_body ? file_b64_body : '';
+                }
+                else
+                {
+                    var base64String = '';
+                }
+
 
                 $.ajax({
-                    type: "POST",
-                    url: "./backwash.php", 
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    data: {
-                        post_topic: topicID,
-                        post_body: replystring,
-                        post_ID: threadID
-                    },
-                    dataType: "json",
-                    success: function(response)
-                    {
-    
-                        reset_form();
-                        loadthreads(this,threadID,topicID,topicName);
-    
-                    
-                    },
-                    error: function(xhr, status, error)
-                    {
-                        reset_form();
-                    }
-                    });
+                type: "POST",
+                url: "./backwash.php", 
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: {
+                    post_type: post_type,
+                    post_title: title_string,
+                    post_topic: topicID,
+                    post_body: body_string,
+                    post_link: link_string,
+                    file_body: base64String,
+                },
+                dataType: "json",
+                success: function(response)
+                {
 
+                    if(response.status == 200)
+                    {
+                        $("#resso").text(makeValidString(response));
+                    }
+                        else 
+                    {
+                        $("#resso").text(makeValidString(response));
+                    }
+
+                    reset_form();
+                    loadposts(this,topicID);
+
+                
+                },
+                error: function(xhr, status, error)
+                {
+                    $("#resso").text(error);
+                    reset_form();
+                }
+                });
 
                 modal.remove();
                 $(".overlay").remove();
@@ -1516,7 +1492,7 @@
             <br/>\n\
             <br/>\n\
             <label for="post_type">Post Type</label><br/>\n\
-            <span id="posttypeselect"></span>\n\
+            <span id="posttypeselect" class="posttypeselect"></span>\n\
             <br/>\n\
             <br/>\n\
             <span class="post_window">\n\
@@ -1524,9 +1500,6 @@
             <textarea id="body_input" class="postinputtextarea body_input" placeholder="some text"></textarea><br/>\n\
             <span class="charsleft charsleft_body">1000</span>\n\
             </span>\n\
-            <br/>\n\
-            <br/>\n\
-            <button id="send_button" class="send_button sendbutton" style="float: left;" disabled>Send</button>\n\
             <br/><br/>\n\
             <span><span id="resso" style="float: left;"></span></span>');
 

@@ -18,7 +18,6 @@ $file_string = (isset($_POST['file_body'])) ? make_valid_string($_POST['file_bod
 //print($file_string);
 //die();
 
-    
 
     if ($loggedin)
     {

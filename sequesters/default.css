@@ -261,12 +261,14 @@ label {
     color: #404040;
     background-color: #ffffff;
     resize: none;
+    padding: 0.5vw;
     font-size: 1.3vw;
-    width: 12vw;
+    width: 24vw;
     border: 0.1px solid #404040;
 }
 .postinput {
-    width: 12vw;
+    width: 24vw;
+    padding: 0.5vw;
     font-size: 1.3vw;
     color: #404040;
     background-color: #ffffff;
@@ -280,12 +282,8 @@ label {
     border: 0.1px solid #404040;
 }
 .postinputtextarea:hover {
-    height: 14vh;
     color: #ffffff;
     background-color: #404040;
-    resize: none;
-    font-size: 1.3vw;
-    width: 12vw;   
     border: 0.1px solid #404040;
 }
 .postinput:hover {
@@ -297,7 +295,7 @@ label {
     background-color: #404040;
 }
 select.postinput {
-    width: 12.45vw;
+    width: 25vw;
     font-size: 1.2vw;
     color: #404040;
     padding: 0.5vw;
@@ -305,8 +303,6 @@ select.postinput {
     border: 0.1px solid #404040;
 }
 select.postinput:hover {
-    width: 12.45vw;
-    font-size: 1.2vw;
     color: #ffffff;
     background-color: #404040;
     border: 0.1px solid #404040;
@@ -345,7 +341,8 @@ select.postlimit:hover {
     font-weight: normal;
     font-size: 1vw;
     font-style: italic;
-    float: left;
+    float: right;
+    padding-right: 3vw;
 }
 
 .account {
@@ -571,6 +568,7 @@ select.postlimit:hover {
     position: fixed;
     top: 50%;
     left: 50%;
+    padding: 4px;
     transform: translate(-50%, -50%);
     width: 30vw;
     text-align: center;
